@@ -1,0 +1,95 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h3>@ViewData["Title"]</h3>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" placeholder="Mật khẩu" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Xác nhận mật khẩu" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.FullName"></label>
+                <input asp-for="Input.FullName" class="form-control" placeholder="Họ tên" />
+                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Gender"></label>
+                <select asp-for="Input.Gender"  class="form-control" data-placeholder="Chọn">
+                    <option class="option-item">Chọn</option>
+                    <option class="option-item" value="true">Nam</option>
+                    <option class="option-item" value="false">Nữ</option>
+                </select>
+                <span asp-validation-for="Input.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Birthday"></label>
+                <input asp-for="Input.Birthday" type="date" class="form-control" placeholder="Ngày sinh" />
+                <span asp-validation-for="Input.Birthday" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.PhoneNumber"></label>
+                <input asp-for="Input.PhoneNumber" type="number" class="form-control" placeholder="Số điện thoại" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <label>
+                    <input type="checkbox" value="accept-term"> Tôi cam kết tuân theo
+                    <a href="/About/Use">điều khoản sử dụng</a> và
+                    <a href="/About/Privacy">điều khoản bảo mật</a> của Beta Cinemas
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng ký</button>
+        </form>
+    </div>
+    <div class="col-md-7 col-md-offset-2">
+        <section>
+            <h3>Bảng tin</h3>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            Hiện tại chúng tôi chưa có thông tin cập nhật mới nào dành cho bạn
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,102 @@
+﻿@model IEnumerable<BetaCinemas.Models.Movie>
+
+@{
+    ViewData["Title"] = "Danh sách phim";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<h3>Danh sách phim</h3>
+
+<p>
+    <a asp-action="Create">Thêm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Director)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Actor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lang)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PosterUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrailerUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsShowing)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Duration)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Director)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Actor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lang)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Genre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PosterUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrailerUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsShowing)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Sửa</a><br />
+                <a asp-action="Delete" asp-route-id="@item.Id">Xoá</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Chi tiết</a><br />
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

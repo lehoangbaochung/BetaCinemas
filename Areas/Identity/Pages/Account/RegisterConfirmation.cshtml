@@ -1,0 +1,23 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Xác nhận đăng ký";
+}
+
+<h3>@ViewData["Title"]</h3>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+        <p>
+            Tài khoản thành viên của bạn đã được đăng ký thành công<br />
+            Vui lòng xác minh tài khoản của bạn<a href="@Model.EmailConfirmationUrl"> tại đây</a>
+        </p>
+    }
+    else
+    {
+        <p>
+            Vui lòng kiểm tra email của bạn để xác minh tài khoản
+        </p>
+    }
+}
+<a href="./Register"><< Trở lại trang trước</a>

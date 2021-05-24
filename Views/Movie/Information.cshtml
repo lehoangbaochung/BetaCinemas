@@ -1,0 +1,81 @@
+﻿@model BetaCinemas.Models.Movie
+
+@{
+    ViewData["Title"] = Html.DisplayFor(model => model.Title);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<dl class="row mt-4 ml-1">
+    <dt class="col-sm-5">
+        <img class="img-responsive border-radius-20" alt=""
+             src=@Html.DisplayFor(model => model.PosterUrl)>
+    </dt>
+    <dd class="col-sm-6">
+        <dl class="row">
+            <dt class="justify-content-end h1 mb-3">
+                @Html.DisplayFor(model => model.Title)
+            </dt>
+            <dd></dd>
+            <dt></dt>
+            <dd class="justify-content-end text-justify mb-3">
+                @Html.DisplayFor(model => model.About)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Director):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Director)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Actor):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Actor)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Genre):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Genre)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Duration):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Duration) phút
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Country):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Country)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Lang):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Lang)
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.ReleaseDate):
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.ReleaseDate)
+            </dd>
+            <dt></dt>
+            <dd class="text-right mt-4 col-sm-8">
+                <a type="button" class="btn btn-sm btn-outline-primary"
+                   href="#">Đặt vé</a>
+                <a type="button" class="btn btn-sm btn-outline-success"
+                   href="@Html.DisplayFor(modelItem => modelItem.TrailerUrl)">Xem trailer</a>
+            </dd>
+        </dl>
+    </dd>
+</dl>
+@*<h1 class="mt-4 text-center text-uppercase">Trailer</h1>
+<div class="row margin-bottom-20">
+    <div class="col-md-12 col-md-offset-2 margin-bottom-35">
+        <iframe src="https://www.youtube.com/embed/50c2zpElWwk?rel=0&amp;showinfo=0&amp;autoplay=0"
+                allowfullscreen="" style="height:unset; width:unset">
+        </iframe>
+    </div>
+</div>*@
