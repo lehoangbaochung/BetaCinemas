@@ -92,6 +92,8 @@ Id int not null primary key identity(1, 1),
 PostTime datetime not null,
 -- Nội dung
 Content ntext not null,
+-- Thể loại (Ưu đãi/Bên lề)
+IsPreferential bit not null,
 -- Địa chỉ liên kết đính kèm
 AttachedUrl text,
 -- Địa chỉ hình ảnh đính kèm
