@@ -68,6 +68,7 @@ BEGIN
         [Id] int NOT NULL IDENTITY,
         [PostTime] datetime NOT NULL,
         [Content] ntext NOT NULL,
+        [IsPreferential] bit NOT NULL,
         [AttachedUrl] text NULL,
         [ImageUrl] text NULL,
         CONSTRAINT [PK_Post] PRIMARY KEY ([Id])
