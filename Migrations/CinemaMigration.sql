@@ -67,6 +67,7 @@ BEGIN
     CREATE TABLE [Post] (
         [Id] int NOT NULL IDENTITY,
         [PostTime] datetime NOT NULL,
+        [Title] nvarchar(256) NOT NULL,
         [Content] ntext NOT NULL,
         [IsPreferential] bit NOT NULL,
         [AttachedUrl] text NULL,
