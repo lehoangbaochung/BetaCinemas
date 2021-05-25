@@ -1,25 +1,26 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace BetaCinemas.Models
 {
     public partial class Ticket
     {
+        public Ticket()
+        {
+            BillDetails = new HashSet<BillDetail>();
+        }
+
         public int Id { get; set; }
-        public int MovieId { get; set; }
-        public int RoomId { get; set; }
-        public int Price { get; set; }
-        public DateTime SoldTime { get; set; }
-        public bool IsAdult { get; set; }
         public string MemberId { get; set; }
+        public int MovieId { get; set; }
+        public int ShowtimeId { get; set; }
+        public int TicketPriceId { get; set; }
+        public DateTime SoldTime { get; set; }
 
-        [ForeignKey("MemberId")]
         public virtual Member Member { get; set; }
-
-        [ForeignKey("MovieId")]
         public virtual Movie Movie { get; set; }
-
-        [ForeignKey("RoomId")]
-        public virtual Room Room { get; set; }
+        public virtual Showtime Showtime { get; set; }
+        public virtual TicketPrice TicketPrice { get; set; }
+        public virtual ICollection<BillDetail> BillDetails { get; set; }
     }
 }

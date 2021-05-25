@@ -1,4 +1,4 @@
-using BetaCinemas.Data;
+using BetaCinemas.Migrations;
 using BetaCinemas.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,11 +21,11 @@ namespace BetaCinemas
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+
             // add dbcontext services
-            services.AddDbContext<CinemaContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<IdentityContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<CinemaContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             // add identity context
@@ -50,6 +50,7 @@ namespace BetaCinemas
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
 
 namespace BetaCinemas.Models
 {
@@ -6,8 +9,9 @@ namespace BetaCinemas.Models
     {
         public int Id { get; set; }
         public int BillId { get; set; }
+        public int TicketId { get; set; }
 
-        [ForeignKey("BillId")]
         public virtual Bill Bill { get; set; }
+        public virtual Ticket Ticket { get; set; }
     }
 }

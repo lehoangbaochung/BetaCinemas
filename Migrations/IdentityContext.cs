@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BetaCinemas.Data
+namespace BetaCinemas.Migrations
 {
     public class IdentityContext : IdentityDbContext<Member>
     {

@@ -13,7 +13,6 @@ namespace BetaCinemas.Models
             Tickets = new HashSet<Ticket>();
         }
 
-        //public new int Id { get; set; }
         public string FullName { get; set; }
         public string Pass { get; set; }
         public DateTime Birthday { get; set; }

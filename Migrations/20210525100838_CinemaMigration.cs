@@ -1,34 +1,52 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BetaCinemas.Migrations
+namespace BetaCinemas.Migrations.Cinema
 {
-    public partial class InitialCreate : Migration
+    public partial class CinemaMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        {         
             migrationBuilder.CreateTable(
                 name: "Movie",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    About = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    About = table.Column<string>(type: "ntext", nullable: true),
                     Duration = table.Column<int>(type: "int", nullable: true),
-                    Director = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Actor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lang = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReleaseTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    PosterUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TrailerUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Director = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Actor = table.Column<string>(type: "ntext", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Lang = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Genre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ReleaseDate = table.Column<DateTime>(type: "date", nullable: true),
+                    PosterUrl = table.Column<string>(type: "text", nullable: true),
+                    TrailerUrl = table.Column<string>(type: "text", nullable: true),
                     IsShowing = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movie", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Post",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PostTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Titlle = table.Column<string>(type: "nvarchar(250)", nullable: false),
+                    Content = table.Column<string>(type: "ntext", nullable: false),
+                    IsPreferential = table.Column<bool>(type: "bit", nullable: false),
+                    AttachedUrl = table.Column<string>(type: "text", nullable: true),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Post", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -53,7 +71,7 @@ namespace BetaCinemas.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowTotal = table.Column<int>(type: "int", nullable: false),
                     ColumnTotal = table.Column<int>(type: "int", nullable: false),
-                    About = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    About = table.Column<string>(type: "ntext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,12 +79,30 @@ namespace BetaCinemas.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TicketPrice",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Weekdays = table.Column<int>(type: "int", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    EndTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    IsPriority = table.Column<bool>(type: "bit", nullable: false),
+                    Is2D = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketPrice", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Pass = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Pass = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -74,7 +110,7 @@ namespace BetaCinemas.Migrations
                     CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -117,10 +153,9 @@ namespace BetaCinemas.Migrations
                 name: "Seat",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false),
-                    RowIndex = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RowIndex = table.Column<string>(type: "char(2)", unicode: false, fixedLength: true, maxLength: 2, nullable: false),
                     ColumnIndex = table.Column<int>(type: "int", nullable: false),
                     IsEmpty = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -128,32 +163,31 @@ namespace BetaCinemas.Migrations
                 {
                     table.PrimaryKey("PK_Seat", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Seat_Room_RoomId",
-                        column: x => x.RoomId,
+                        name: "FK__Seat__Id__7720AD13",
+                        column: x => x.Id,
                         principalTable: "Room",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Showtime",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false),
-                    ShowTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Format = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ShowTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Is2D = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Showtime", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Showtime_Room_RoomId",
-                        column: x => x.RoomId,
+                        name: "FK__Showtime__Id__7BE56230",
+                        column: x => x.Id,
                         principalTable: "Room",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,21 +196,28 @@ namespace BetaCinemas.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SoldTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    MemberId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    SoldTime = table.Column<DateTime>(type: "datetime", nullable: true),
                     Total = table.Column<int>(type: "int", nullable: false),
                     IsSold = table.Column<bool>(type: "bit", nullable: false),
-                    About = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    About = table.Column<string>(type: "ntext", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bill", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bill_Users_MemberId",
+                        name: "FK__Bill__MemberId__084B3915",
                         column: x => x.MemberId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bill_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -185,20 +226,27 @@ namespace BetaCinemas.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SentTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MemberId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    SentTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Content = table.Column<string>(type: "ntext", nullable: false),
                     IsReplied = table.Column<bool>(type: "bit", nullable: false),
-                    MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contact", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Contact_Users_MemberId",
+                        name: "FK__Contact__MemberI__725BF7F6",
                         column: x => x.MemberId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Contact_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -292,34 +340,46 @@ namespace BetaCinemas.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    MemberId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     MovieId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    SoldTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsAdult = table.Column<bool>(type: "bit", nullable: false),
-                    MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ShowtimeId = table.Column<int>(type: "int", nullable: false),
+                    TicketPriceId = table.Column<int>(type: "int", nullable: false),
+                    SoldTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ticket", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ticket_Movie_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movie",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Ticket_Room_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Room",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Ticket_Users_MemberId",
+                        name: "FK__Ticket__MemberId__00AA174D",
                         column: x => x.MemberId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__Ticket__MovieId__019E3B86",
+                        column: x => x.MovieId,
+                        principalTable: "Movie",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__Ticket__Showtime__02925FBF",
+                        column: x => x.ShowtimeId,
+                        principalTable: "Showtime",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__Ticket__TicketPr__038683F8",
+                        column: x => x.TicketPriceId,
+                        principalTable: "TicketPrice",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ticket_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -328,17 +388,24 @@ namespace BetaCinemas.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BillId = table.Column<int>(type: "int", nullable: false)
+                    BillId = table.Column<int>(type: "int", nullable: false),
+                    TicketId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BillDetail", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BillDetail_Bill_BillId",
+                        name: "FK__BillDetai__BillI__0D0FEE32",
                         column: x => x.BillId,
                         principalTable: "Bill",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK__BillDetai__Ticke__0E04126B",
+                        column: x => x.TicketId,
+                        principalTable: "Ticket",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -347,14 +414,29 @@ namespace BetaCinemas.Migrations
                 column: "MemberId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bill_UserId",
+                table: "Bill",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BillDetail_BillId",
                 table: "BillDetail",
                 column: "BillId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BillDetail_TicketId",
+                table: "BillDetail",
+                column: "TicketId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Contact_MemberId",
                 table: "Contact",
                 column: "MemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contact_UserId",
+                table: "Contact",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -366,19 +448,7 @@ namespace BetaCinemas.Migrations
                 table: "Roles",
                 column: "NormalizedName",
                 unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seat_RoomId",
-                table: "Seat",
-                column: "RoomId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Showtime_RoomId",
-                table: "Showtime",
-                column: "RoomId",
-                unique: true);
+                filter: "([NormalizedName] IS NOT NULL)");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ticket_MemberId",
@@ -391,9 +461,19 @@ namespace BetaCinemas.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_RoomId",
+                name: "IX_Ticket_ShowtimeId",
                 table: "Ticket",
-                column: "RoomId");
+                column: "ShowtimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticket_TicketPriceId",
+                table: "Ticket",
+                column: "TicketPriceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticket_UserId",
+                table: "Ticket",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
@@ -420,7 +500,7 @@ namespace BetaCinemas.Migrations
                 table: "Users",
                 column: "NormalizedUserName",
                 unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                filter: "([NormalizedUserName] IS NOT NULL)");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -432,7 +512,13 @@ namespace BetaCinemas.Migrations
                 name: "Contact");
 
             migrationBuilder.DropTable(
+                name: "Post");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "Seat");
 
             migrationBuilder.DropTable(
                 name: "UserClaims");
@@ -456,13 +542,16 @@ namespace BetaCinemas.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Movie");
 
             migrationBuilder.DropTable(
-                name: "Seat");
+                name: "Showtime");
 
             migrationBuilder.DropTable(
-                name: "Showtime");
+                name: "TicketPrice");
 
             migrationBuilder.DropTable(
                 name: "Users");

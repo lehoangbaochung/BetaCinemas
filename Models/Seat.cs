@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+
+#nullable disable
 
 namespace BetaCinemas.Models
 {
@@ -10,7 +13,6 @@ namespace BetaCinemas.Models
         public int ColumnIndex { get; set; }
         public bool IsEmpty { get; set; }
 
-        [ForeignKey("RoomId")]
-        public virtual Room Room { get; set; }
+        public virtual Room IdNavigation { get; set; }
     }
 }

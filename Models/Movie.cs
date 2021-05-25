@@ -39,12 +39,12 @@ namespace BetaCinemas.Models
         public string Genre { get; set; }
 
         [Display(Name = "Thời gian khởi chiếu")]
-        public DateTime? ReleaseTime { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
-        [Display(Name = "Đường dẫn áp phích")]
+        [Display(Name = "Địa chỉ hình ảnh áp phích")]
         public string PosterUrl { get; set; }
 
-        [Display(Name = "Đường dẫn video trailer")]
+        [Display(Name = "Địa chỉ video trailer")]
         public string TrailerUrl { get; set; }
 
         [Display(Name = "Trạng thái khởi chiếu")]
@@ -56,11 +56,11 @@ namespace BetaCinemas.Models
         public string Description => About.Length > 100 ? About.Remove(100).TrimEnd() + "..." : About;
 
         [Display(Name = "Ngày khởi chiếu")]
-        public string ReleaseDate
+        public string ReleaseDate2
         {
             get
             {
-                var array = ReleaseTime.ToString().Split(' ')[0].Split('/');
+                var array = ReleaseDate.ToString().Split(' ')[0].Split('/');
                 return $"{ array[2] }/{ array[1] }/20{ array[0] }";
             }
         }
