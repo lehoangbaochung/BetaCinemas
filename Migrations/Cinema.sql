@@ -90,6 +90,8 @@ create table POST(
 Id int not null primary key identity(1, 1),
 -- Thời gian đăng bài
 PostTime datetime not null,
+-- Tựa đề
+Title nvarchar(50) not null,
 -- Nội dung
 Content ntext not null,
 -- Thể loại (Ưu đãi/Bên lề)
