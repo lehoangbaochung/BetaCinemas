@@ -9,8 +9,6 @@ namespace BetaCinemas.Models
 
         public CinemaContext(DbContextOptions<CinemaContext> options) : base(options) { }
 
-        public virtual DbSet<Bill> Bills { get; set; }
-        public virtual DbSet<BillDetail> BillDetails { get; set; }
         public virtual DbSet<Contact> Contacts { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
@@ -32,42 +30,6 @@ namespace BetaCinemas.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Vietnamese_CI_AS");
-
-            modelBuilder.Entity<Bill>(entity =>
-            {
-                entity.ToTable("Bill");
-
-                entity.Property(e => e.About).HasColumnType("ntext");
-
-                entity.Property(e => e.MemberId)
-                    .IsRequired()
-                    .HasMaxLength(450);
-
-                entity.Property(e => e.SoldTime).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.Bills)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bill__MemberId__084B3915");
-            });
-
-            modelBuilder.Entity<BillDetail>(entity =>
-            {
-                entity.ToTable("BillDetail");
-
-                entity.HasOne(d => d.Bill)
-                    .WithMany(p => p.BillDetails)
-                    .HasForeignKey(d => d.BillId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BillDetai__BillI__0D0FEE32");
-
-                entity.HasOne(d => d.Ticket)
-                    .WithMany(p => p.BillDetails)
-                    .HasForeignKey(d => d.TicketId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BillDetai__Ticke__0E04126B");
-            });
 
             modelBuilder.Entity<Contact>(entity =>
             {
@@ -129,7 +91,17 @@ namespace BetaCinemas.Models
 
                 entity.Property(e => e.ImageUrl).HasColumnType("text");
 
-                entity.Property(e => e.PostTime).HasColumnType("datetime");
+                entity.Property(e => e.PostTime)
+                    .IsRequired()
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Genre)
+                    .IsRequired()
+                    .HasColumnType("nvarchar(50)");
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasColumnType("nvarchar(250)");
             });
 
             modelBuilder.Entity<Room>(entity =>
@@ -151,7 +123,7 @@ namespace BetaCinemas.Models
                     .IsUnicode(false)
                     .IsFixedLength(true);
 
-                entity.HasOne(d => d.IdNavigation)
+                entity.HasOne(d => d.Room)
                     .WithOne(p => p.Seat)
                     .HasForeignKey<Seat>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -164,7 +136,7 @@ namespace BetaCinemas.Models
 
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.ShowTime1)
+                entity.Property(e => e.ShowTime)
                     .HasColumnType("datetime")
                     .HasColumnName("ShowTime");
 

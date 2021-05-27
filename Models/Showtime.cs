@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-#nullable disable
-
 namespace BetaCinemas.Models
 {
     public partial class Showtime
@@ -14,7 +12,7 @@ namespace BetaCinemas.Models
 
         public int Id { get; set; }
         public int RoomId { get; set; }
-        public DateTime ShowTime1 { get; set; }
+        public DateTime ShowTime { get; set; }
         public bool Is2D { get; set; }
 
         public virtual Room IdNavigation { get; set; }

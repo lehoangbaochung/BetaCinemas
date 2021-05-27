@@ -18,64 +18,6 @@ namespace BetaCinemas.Migrations.Cinema
                 .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("BetaCinemas.Models.Bill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("About")
-                        .HasColumnType("ntext");
-
-                    b.Property<bool>("IsSold")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MemberId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("SoldTime")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("Total")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Bill");
-                });
-
-            modelBuilder.Entity("BetaCinemas.Models.BillDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("BillId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TicketId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BillId");
-
-                    b.HasIndex("TicketId");
-
-                    b.ToTable("BillDetail");
-                });
-
             modelBuilder.Entity("BetaCinemas.Models.Contact", b =>
                 {
                     b.Property<int>("Id")
@@ -178,9 +120,9 @@ namespace BetaCinemas.Migrations.Cinema
                         .IsRequired()
                         .HasColumnType("ntext");
 
-                    b.Property<string>("IsPreferential")
+                    b.Property<string>("Genre")
                         .IsRequired()
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("text");
@@ -554,40 +496,6 @@ namespace BetaCinemas.Migrations.Cinema
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("BetaCinemas.Models.Bill", b =>
-                {
-                    b.HasOne("BetaCinemas.Models.Users", "Users")
-                        .WithMany("Bills")
-                        .HasForeignKey("MemberId")
-                        .HasConstraintName("FK__Bill__MemberId__084B3915")
-                        .IsRequired();
-
-                    b.HasOne("BetaCinemas.Models.User", null)
-                        .WithMany("Bills")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("BetaCinemas.Models.BillDetail", b =>
-                {
-                    b.HasOne("BetaCinemas.Models.Bill", "Bill")
-                        .WithMany("BillDetails")
-                        .HasForeignKey("BillId")
-                        .HasConstraintName("FK__BillDetai__BillI__0D0FEE32")
-                        .IsRequired();
-
-                    b.HasOne("BetaCinemas.Models.Ticket", "Ticket")
-                        .WithMany("BillDetails")
-                        .HasForeignKey("TicketId")
-                        .HasConstraintName("FK__BillDetai__Ticke__0E04126B")
-                        .IsRequired();
-
-                    b.Navigation("Bill");
-
-                    b.Navigation("Ticket");
-                });
-
             modelBuilder.Entity("BetaCinemas.Models.Contact", b =>
                 {
                     b.HasOne("BetaCinemas.Models.Users", "Users")
@@ -616,7 +524,7 @@ namespace BetaCinemas.Migrations.Cinema
 
             modelBuilder.Entity("BetaCinemas.Models.Seat", b =>
                 {
-                    b.HasOne("BetaCinemas.Models.Room", "IdNavigation")
+                    b.HasOne("BetaCinemas.Models.Room", "Room")
                         .WithOne("Seat")
                         .HasForeignKey("BetaCinemas.Models.Seat", "Id")
                         .HasConstraintName("FK__Seat__Id__7720AD13")
@@ -627,7 +535,7 @@ namespace BetaCinemas.Migrations.Cinema
 
             modelBuilder.Entity("BetaCinemas.Models.Showtime", b =>
                 {
-                    b.HasOne("BetaCinemas.Models.Room", "IdNavigation")
+                    b.HasOne("BetaCinemas.Models.Room", "Room")
                         .WithOne("Showtime")
                         .HasForeignKey("BetaCinemas.Models.Showtime", "Id")
                         .HasConstraintName("FK__Showtime__Id__7BE56230")
@@ -727,15 +635,8 @@ namespace BetaCinemas.Migrations.Cinema
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BetaCinemas.Models.Bill", b =>
-                {
-                    b.Navigation("BillDetails");
-                });
-
             modelBuilder.Entity("BetaCinemas.Models.Users", b =>
                 {
-                    b.Navigation("Bills");
-
                     b.Navigation("Contacts");
 
                     b.Navigation("Tickets");
@@ -765,11 +666,6 @@ namespace BetaCinemas.Migrations.Cinema
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("BetaCinemas.Models.Ticket", b =>
-                {
-                    b.Navigation("BillDetails");
-                });
-
             modelBuilder.Entity("BetaCinemas.Models.TicketPrice", b =>
                 {
                     b.Navigation("Tickets");
@@ -777,8 +673,6 @@ namespace BetaCinemas.Migrations.Cinema
 
             modelBuilder.Entity("BetaCinemas.Models.User", b =>
                 {
-                    b.Navigation("Bills");
-
                     b.Navigation("Contacts");
 
                     b.Navigation("Tickets");

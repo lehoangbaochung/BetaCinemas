@@ -72,7 +72,7 @@ create table TICKETPRICE(
 -- Id
 Id int not null primary key identity(1, 1),
 -- Thứ trong tuần
-Weekdays int not null,
+DateType nvarchar(20) not null,
 -- Thời gian bắt đầu
 StartTime time,
 -- Thời gian kết thúc
@@ -82,7 +82,9 @@ Price int not null,
 -- Trạng thái ưu tiên (đối tượng mua vé)
 IsPriority bit not null,
 -- Trạng thái định dạng của phim (2D/3D)
-Is2D bit not null)
+Is2D bit not null,
+-- Trạng thái suất chiếu đặc biệt
+IsSpecial bit not null)
 go
 -- Bảng Bài đăng (Bảng tin)
 create table POST(
@@ -91,11 +93,11 @@ Id int not null primary key identity(1, 1),
 -- Thời gian đăng bài
 PostTime datetime not null,
 -- Tựa đề
-Title nvarchar(50) not null,
+Title nvarchar(250) not null,
 -- Nội dung
 Content ntext not null,
--- Thể loại (Ưu đãi/Bên lề)
-IsPreferential bit not null,
+-- Thể loại
+Genre nvarchar(50) not null,
 -- Địa chỉ liên kết đính kèm
 AttachedUrl text,
 -- Địa chỉ hình ảnh đính kèm
@@ -137,12 +139,18 @@ create table SHOWTIME(
 Id int not null primary key identity(1, 1),
 -- Id phòng
 RoomId int not null,
--- Thời gian xuất chiếu
+-- Id phim
+MovieId int not null,
+-- Thời gian suất chiếu
 ShowTime datetime not null,
 -- Trạng thái định dạng của phim (2D/3D)
 Is2D bit not null,
+-- Trạng thái suất chiếu đặc biệt
+IsSpecial bit not null,
 -- Liên kết với bảng Phòng
-foreign key (Id) references ROOM(Id))
+foreign key (RoomId) references ROOM(Id),
+-- Liên kết với bảng Phim
+foreign key (MovieId) references MOVIE(Id))
 go
 -- Bảng Vé
 create table TICKET(
@@ -167,32 +175,3 @@ foreign key (ShowtimeId) references SHOWTIME(Id),
 -- Liên kết với bảng Giá vé
 foreign key (TicketPriceId) references TICKETPRICE(Id))
 go
--- Bảng Hoá đơn
-create table BILL(
--- Id
-Id int not null primary key identity(1, 1),
--- Id thành viên
-MemberId int not null,
--- Thời gian thanh toán
-SoldTime datetime,
--- Tổng tiền
-Total int not null,
--- Trạng thái thanh toán
-IsSold bit not null,
--- Ghi chú
-About ntext,
--- Liên kết với bảng Thành viên
-foreign key (MemberId) references MEMBER(Id))
-go
--- Bảng Chi tiết hoá đơn
-create table BILLDETAIL(
--- Id
-Id int not null primary key identity(1, 1),
--- Id hoá đơn
-BillId int not null,
--- Id vé
-TicketId int not null,
--- Liên kết với bảng Hoá đơn
-foreign key (BillId) references BILL(Id),
--- Liên kết với bảng Vé
-foreign key (TicketId) references TICKET(Id))

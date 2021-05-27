@@ -38,9 +38,9 @@ namespace BetaCinemas.Migrations.Cinema
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PostTime = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Titlle = table.Column<string>(type: "nvarchar(250)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(250)", nullable: false),
                     Content = table.Column<string>(type: "ntext", nullable: false),
-                    IsPreferential = table.Column<bool>(type: "bit", nullable: false),
+                    Genre = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     AttachedUrl = table.Column<string>(type: "text", nullable: true),
                     ImageUrl = table.Column<string>(type: "text", nullable: true)
                 },
@@ -186,36 +186,6 @@ namespace BetaCinemas.Migrations.Cinema
                         name: "FK__Showtime__Id__7BE56230",
                         column: x => x.Id,
                         principalTable: "Room",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bill",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MemberId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    SoldTime = table.Column<DateTime>(type: "datetime", nullable: true),
-                    Total = table.Column<int>(type: "int", nullable: false),
-                    IsSold = table.Column<bool>(type: "bit", nullable: false),
-                    About = table.Column<string>(type: "ntext", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bill", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK__Bill__MemberId__084B3915",
-                        column: x => x.MemberId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bill_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -380,53 +350,7 @@ namespace BetaCinemas.Migrations.Cinema
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BillDetail",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BillId = table.Column<int>(type: "int", nullable: false),
-                    TicketId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BillDetail", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK__BillDetai__BillI__0D0FEE32",
-                        column: x => x.BillId,
-                        principalTable: "Bill",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK__BillDetai__Ticke__0E04126B",
-                        column: x => x.TicketId,
-                        principalTable: "Ticket",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_MemberId",
-                table: "Bill",
-                column: "MemberId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_UserId",
-                table: "Bill",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillDetail_BillId",
-                table: "BillDetail",
-                column: "BillId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BillDetail_TicketId",
-                table: "BillDetail",
-                column: "TicketId");
+                });                      
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contact_MemberId",
@@ -506,9 +430,6 @@ namespace BetaCinemas.Migrations.Cinema
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BillDetail");
-
-            migrationBuilder.DropTable(
                 name: "Contact");
 
             migrationBuilder.DropTable(
@@ -533,9 +454,6 @@ namespace BetaCinemas.Migrations.Cinema
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "Bill");
-
-            migrationBuilder.DropTable(
                 name: "Ticket");
 
             migrationBuilder.DropTable(
@@ -552,9 +470,6 @@ namespace BetaCinemas.Migrations.Cinema
 
             migrationBuilder.DropTable(
                 name: "TicketPrice");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Room");

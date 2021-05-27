@@ -8,7 +8,6 @@ namespace BetaCinemas.Models
     {
         public Member()
         {
-            Bills = new HashSet<Bill>();
             Contacts = new HashSet<Contact>();
             Tickets = new HashSet<Ticket>();
         }
@@ -21,7 +20,6 @@ namespace BetaCinemas.Models
         public string HomeAddress { get; set; }
         public string CardNumber { get; set; }
 
-        public virtual ICollection<Bill> Bills { get; set; }
         public virtual ICollection<Contact> Contacts { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }
     }

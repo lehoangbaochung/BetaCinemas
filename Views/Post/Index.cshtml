@@ -1,123 +1,46 @@
-﻿@model IEnumerable<BetaCinemas.Models.Post>
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<BetaCinemas.Models.Post>
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
 
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-}
+    ViewData["Title"] = "Tin mới và ưu đãi";
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PostTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Content)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AttachedUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AttachedUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-
-<main role="main" class="container">
-    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
-        <img class="mr-3" src="https://betacinemas.vn/Assets/Common/logo/logo.png" alt="" width="48" height="48">
-        <div class="lh-100">
-            <h6 class="mb-0 text-white lh-100">Beta Cinemas</h6>
-            <small>Since 2014</small>
-        </div>
-    </div>
-
-    <div class="my-3 p-3 bg-white rounded box-shadow">
-        <h3 class="border-bottom border-gray pb-2 mb-0">Khuyến mãi mới</h3>
-        @{
-            foreach (var item in Model)
-            {
-                if (item.IsPreferential)
-                {
-                    <div class="media text-muted pt-3">
-                        <img src="@Html.DisplayFor(modelItem => item.ImageUrl)"
-                             alt="Khuyến mãi" class="mr-2 rounded" data-src="holder.js/32x32?theme=thumb&amp;bg=007bff&amp;fg=007bff&amp;size=1"
-                             style="width: 32px; height: 32px;" data-holder-rendered="true">
-                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                            <strong class="d-block text-gray-dark">@Html.DisplayFor(modelItem => item.Title)</strong>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </p>
-                    </div>
-                }
-            }
+    @if (SignInManager.IsSignedIn(User))
+     {
+        if (User.Identity.Name.Equals("admin@betacorp.vn"))
+        {
+            Layout = "~/Views/Shared/_DashboardLayout.cshtml";
         }
-        <small class="d-block text-right mt-3">
-            <a href="#">Tất cả khuyến mãi</a>
-        </small>
-    </div>
+     }
+}
 
-    <div class="my-3 p-3 bg-white rounded box-shadow">
-        <h3 class="border-bottom border-gray pb-2 mb-0">Tin bên lề</h3>
-        <div class="media text-muted pt-3">
-            <img data-src="holder.js/32x32?theme=thumb&amp;bg=007bff&amp;fg=007bff&amp;size=1" alt="32x32" class="mr-2 rounded" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_179a40a9351%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_179a40a9351%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.5390625%22%20y%3D%2216.9%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 32px; height: 32px;">
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <strong class="text-gray-dark">Full Name</strong>
-                    <a href="#">Follow</a>
+<div class="row mb-3">
+    @{
+        foreach (var item in Model.OrderByDescending(item => item.PostTime))
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <img class="card-img-top" data-holder-rendered="true"
+                         src="@Html.DisplayFor(modelItem => item.ImageUrl)">
+                    <div class="card-body">
+                        <h6 class="card-header text-danger">@Html.DisplayFor(modelItem => item.Genre)</h6>
+                        <h3 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h3>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a type="button" class="btn btn-sm btn-outline-primary"
+                                   href="/Post/Details/@Html.DisplayFor(modelItem => item.Id)">Chi tiết</a>
+                                <a type="button" class="btn btn-sm btn-outline-success"
+                                   href="@Html.DisplayFor(modelItem => item.AttachedUrl)">Đính kèm</a>
+                            </div>
+                            <small class="text-muted text-right">
+                                @Html.DisplayFor(modelItem => item.PostDate)
+                            </small>
+                        </div>
+                    </div>
                 </div>
-                <span class="d-block">username</span>
             </div>
-        </div>
-        <div class="media text-muted pt-3">
-            <img data-src="holder.js/32x32?theme=thumb&amp;bg=007bff&amp;fg=007bff&amp;size=1" alt="32x32" class="mr-2 rounded" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_179a40a9353%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_179a40a9353%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.5390625%22%20y%3D%2216.9%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 32px; height: 32px;">
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <strong class="text-gray-dark">Full Name</strong>
-                    <a href="#">Follow</a>
-                </div>
-                <span class="d-block">username</span>
-            </div>
-        </div>
-        <div class="media text-muted pt-3">
-            <img data-src="holder.js/32x32?theme=thumb&amp;bg=007bff&amp;fg=007bff&amp;size=1" alt="32x32" class="mr-2 rounded" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_179a40a9354%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_179a40a9354%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.5390625%22%20y%3D%2216.9%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 32px; height: 32px;">
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <strong class="text-gray-dark">Full Name</strong>
-                    <a href="#">Follow</a>
-                </div>
-                <span class="d-block">username</span>
-            </div>
-        </div>
-        <small class="d-block text-right mt-3">
-            <a href="#">All suggestions</a>
-        </small>
-    </div>
-</main>
+        }
+    }
+</div>
