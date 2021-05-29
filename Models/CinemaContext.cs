@@ -1,15 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Configuration;
+﻿using System.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace BetaCinemas.Models
 {
     public partial class CinemaContext : DbContext
     {
-        public CinemaContext() { }
+        public CinemaContext()
+        {
+        }
 
-        public CinemaContext(DbContextOptions<CinemaContext> options) : base(options) { }
+        public CinemaContext(DbContextOptions<CinemaContext> options)
+            : base(options)
+        {
+        }
 
         public virtual DbSet<Contact> Contacts { get; set; }
+        public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
@@ -17,7 +23,6 @@ namespace BetaCinemas.Models
         public virtual DbSet<Showtime> Showtimes { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<TicketPrice> TicketPrices { get; set; }
-        public virtual DbSet<Member> Members { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,13 +40,13 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Contact");
 
-                entity.Property(e => e.Content)
+                entity.HasIndex(e => e.MemberId, "IX_Contact_MemberId");
+
+                entity.Property(e => e.SentContent)
                     .IsRequired()
                     .HasColumnType("ntext");
 
-                entity.Property(e => e.MemberId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.Property(e => e.MemberId).IsRequired();
 
                 entity.Property(e => e.SentTime).HasColumnType("datetime");
 
@@ -50,6 +55,11 @@ namespace BetaCinemas.Models
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Contact__MemberI__725BF7F6");
+            });
+
+            modelBuilder.Entity<Member>(entity =>
+            {
+                entity.ToTable("User");
             });
 
             modelBuilder.Entity<Movie>(entity =>
@@ -89,19 +99,13 @@ namespace BetaCinemas.Models
                     .IsRequired()
                     .HasColumnType("ntext");
 
-                entity.Property(e => e.ImageUrl).HasColumnType("text");
-
-                entity.Property(e => e.PostTime)
-                    .IsRequired()
-                    .HasColumnType("datetime");
-
                 entity.Property(e => e.Genre)
                     .IsRequired()
-                    .HasColumnType("nvarchar(50)");
+                    .HasMaxLength(50);
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasColumnType("nvarchar(250)");
+                entity.Property(e => e.ImageUrl).HasColumnType("text");
+
+                entity.Property(e => e.PostTime).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<Room>(entity =>
@@ -115,7 +119,7 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Seat");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.RowIndex)
                     .IsRequired()
@@ -134,26 +138,36 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Showtime");
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.ShowTime)
                     .HasColumnType("datetime")
                     .HasColumnName("ShowTime");
 
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Showtime)
-                    .HasForeignKey<Showtime>(d => d.Id)
+                entity.HasOne(d => d.Movie)
+                    .WithMany(p => p.Showtimes)
+                    .HasForeignKey(d => d.MovieId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Showtime__Id__7BE56230");
+                    .HasConstraintName("FK__Showtime__MovieI__6754599E");
+
+                entity.HasOne(d => d.Room)
+                    .WithMany(p => p.Showtimes)
+                    .HasForeignKey(d => d.RoomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Showtime__RoomId__66603565");
             });
 
             modelBuilder.Entity<Ticket>(entity =>
             {
                 entity.ToTable("Ticket");
 
-                entity.Property(e => e.MemberId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.HasIndex(e => e.MemberId, "IX_Ticket_MemberId");
+
+                entity.HasIndex(e => e.ShowtimeId, "IX_Ticket_ShowtimeId");
+
+                entity.HasIndex(e => e.TicketPriceId, "IX_Ticket_TicketPriceId");
+
+                entity.HasIndex(e => e.MemberId, "IX_Ticket_UserId");
+
+                entity.Property(e => e.MemberId).IsRequired();
 
                 entity.Property(e => e.SoldTime).HasColumnType("datetime");
 
@@ -163,45 +177,26 @@ namespace BetaCinemas.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Ticket__MemberId__00AA174D");
 
-                entity.HasOne(d => d.Movie)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.MovieId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__MovieId__019E3B86");
-
                 entity.HasOne(d => d.Showtime)
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.ShowtimeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__Showtime__02925FBF");
+                    .HasConstraintName("FK__Ticket__ShowtimeId__019E3B86");
 
                 entity.HasOne(d => d.TicketPrice)
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.TicketPriceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__TicketPr__038683F8");
+                    .HasConstraintName("FK__Ticket__TicketPr__6D0D32F4");
             });
 
             modelBuilder.Entity<TicketPrice>(entity =>
             {
                 entity.ToTable("TicketPrice");
-            });
 
-            modelBuilder.Entity<Member>(entity =>
-            {
-                entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
-
-                entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
-                    .IsUnique()
-                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-                entity.Property(e => e.Email).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-
-                entity.Property(e => e.UserName).HasMaxLength(256);
+                entity.Property(e => e.DateType)
+                    .IsRequired()
+                    .HasMaxLength(20);
             });
 
             OnModelCreatingPartial(modelBuilder);

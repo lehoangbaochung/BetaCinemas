@@ -23,16 +23,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end font-weight-bold">
                     <ul class="navbar-nav flex-grow-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Home/Index">LỊCH CHIẾU</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">LỊCH CHIẾU</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Movie/Showing">PHIM</a>
+                            <a class="nav-link text-dark" asp-controller="Movie" asp-action="Showing">PHIM</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/View">RẠP</a>
+                            <a class="nav-link text-dark">RẠP</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Ticket">GIÁ VÉ</a>
+                            <a class="nav-link text-dark" asp-controller="TicketPrice" asp-action="Index">GIÁ VÉ</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Post">TIN MỚI VÀ ƯU ĐÃI</a>
@@ -60,7 +60,7 @@
         <div class="container text-right">
             <a style="float:left">&copy; 2021 - Beta Cinemas</a>
             <a href="/About/Index">Giới thiệu</a> -
-            <a href="/About/Contact">Liên hệ</a> -
+            <a asp-controller="Contact" asp-action="Create">Liên hệ</a> -
             <a href="/About/Question">Câu hỏi thường gặp</a> -
             <a href="/About/Use">Sử dụng</a> -
             <a href="/About/Privacy">Bảo mật</a>

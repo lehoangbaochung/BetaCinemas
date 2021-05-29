@@ -72,18 +72,18 @@ create table TICKETPRICE(
 -- Id
 Id int not null primary key identity(1, 1),
 -- Thứ trong tuần
-DateType nvarchar(20) not null,
+DateType nvarchar(50) not null,
 -- Thời gian bắt đầu
 StartTime time,
 -- Thời gian kết thúc
 EndTime time,
 -- Giá vé
 Price int not null,
--- Trạng thái ưu tiên (đối tượng mua vé)
+-- Đối tượng mua vé
 IsPriority bit not null,
--- Trạng thái định dạng của phim (2D/3D)
+-- Định dạng của phim (2D/3D)
 Is2D bit not null,
--- Trạng thái suất chiếu đặc biệt
+-- Suất chiếu đặc biệt
 IsSpecial bit not null)
 go
 -- Bảng Bài đăng (Bảng tin)
@@ -93,10 +93,10 @@ Id int not null primary key identity(1, 1),
 -- Thời gian đăng bài
 PostTime datetime not null,
 -- Tựa đề
-Title nvarchar(250) not null,
+Title ntext not null,
 -- Nội dung
 Content ntext not null,
--- Thể loại
+-- Chủ đề/Thể loại
 Genre nvarchar(50) not null,
 -- Địa chỉ liên kết đính kèm
 AttachedUrl text,
@@ -111,8 +111,12 @@ Id int not null primary key identity(1, 1),
 MemberId int not null,
 -- Thời gian liên hệ
 SentTime datetime not null,
--- Nội dung
-Content ntext not null,
+-- Nội dung gửi
+SendContent ntext not null,
+-- Thời gian trả lời
+ReplyTime datetime not null,
+-- Nội dung trả lời
+ReplyContent ntext not null,
 -- Trạng thái trả lời (đã đọc/chưa đọc)
 IsReplied bit not null,
 -- Liên kết với bảng Thành viên
@@ -141,15 +145,14 @@ Id int not null primary key identity(1, 1),
 RoomId int not null,
 -- Id phim
 MovieId int not null,
--- Thời gian suất chiếu
+-- Thời gian xuất chiếu
 ShowTime datetime not null,
--- Trạng thái định dạng của phim (2D/3D)
+-- Định dạng phim (2D/3D)
 Is2D bit not null,
--- Trạng thái suất chiếu đặc biệt
+-- Suất chiếu đặc biệt
 IsSpecial bit not null,
 -- Liên kết với bảng Phòng
 foreign key (RoomId) references ROOM(Id),
--- Liên kết với bảng Phim
 foreign key (MovieId) references MOVIE(Id))
 go
 -- Bảng Vé
@@ -158,9 +161,7 @@ create table TICKET(
 Id int not null primary key identity(1, 1),
 -- Id thành viên
 MemberId int not null,
--- Id phim
-MovieId int not null,
--- Id phòng
+-- Id suất chiếu
 ShowtimeId int not null,
 -- Id giá vé
 TicketPriceId int not null,
@@ -168,8 +169,6 @@ TicketPriceId int not null,
 SoldTime datetime not null,
 -- Liên kết với bảng Thành viên
 foreign key (MemberId) references MEMBER(Id),
--- Liên kết với bảng Phim
-foreign key (MovieId) references MOVIE(Id),
 -- Liên kết với bảng Suất chiếu
 foreign key (ShowtimeId) references SHOWTIME(Id),
 -- Liên kết với bảng Giá vé

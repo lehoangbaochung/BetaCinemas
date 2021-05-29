@@ -1,28 +1,31 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using System;
+using System.Security.Claims;
 
 namespace BetaCinemas.Controllers
 {
-    public class PostController : Controller
+    public class ContactController : Controller
     {
         private readonly CinemaContext context;
 
-        public PostController(CinemaContext context)
+        public ContactController(CinemaContext context)
         {
             this.context = context;
         }
 
-        // GET: Post
+        // GET: Contact
         public async Task<IActionResult> Index()
         {
-            return View(await context.Posts.ToListAsync());
+            var cinemaContext = context.Contacts.Include(c => c.Member);
+            return View(await cinemaContext.ToListAsync());
         }
 
-        // GET: Post/Details/5
+        // GET: Contact/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,39 +33,49 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            var post = await context.Posts
+            var contact = await context.Contacts
+                .Include(c => c.Member)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
+
+            if (contact == null)
             {
                 return NotFound();
             }
 
-            return View(post);
+            return View(contact);
         }
 
-        // GET: Post/Create
+        // GET: Contact/Create
         public IActionResult Create()
         {
+            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id");
             return View();
         }
 
-        // POST: Post/Create
+        // POST: Contact/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,AttachedUrl,ImageUrl")] Post post)
+        public async Task<IActionResult> Create(
+            [Bind("Id,MemberId,SentTime,SentContent,ReplyTime,ReplyContent,IsReplied")] Contact contact)
         {
             if (ModelState.IsValid)
             {
-                post.PostTime = DateTime.Now;
+                contact.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                contact.SentTime = DateTime.Parse("2021/05/29 10:00:00");
+                context.Database.ExecuteSqlRaw("");
+                context.Add(contact);
 
-                context.Add(post);
                 await context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(post);
+
+            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
+
+            return View(contact);
         }
 
-        // GET: Post/Edit/5
+        // GET: Contact/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -70,22 +83,22 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            var post = await context.Posts.FindAsync(id);
-            if (post == null)
+            var contact = await context.Contacts.FindAsync(id);
+
+            if (contact == null)
             {
                 return NotFound();
             }
-            return View(post);
+            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
+            return View(contact);
         }
 
-        // POST: Post/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Contact/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PostTime,Content,AttachedUrl,ImageUrl")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MemberId,SentTime,SentContent,ReplyTime,ReplyContent,IsReplied")] Contact contact)
         {
-            if (id != post.Id)
+            if (id != contact.Id)
             {
                 return NotFound();
             }
@@ -94,12 +107,12 @@ namespace BetaCinemas.Controllers
             {
                 try
                 {
-                    context.Update(post);
+                    context.Update(contact);
                     await context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PostExists(post.Id))
+                    if (!ContactExists(contact.Id))
                     {
                         return NotFound();
                     }
@@ -110,10 +123,11 @@ namespace BetaCinemas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(post);
+            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
+            return View(contact);
         }
 
-        // GET: Post/Delete/5
+        // GET: Contact/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,30 +135,31 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            var post = await context.Posts
+            var contact = await context.Contacts
+                .Include(c => c.Member)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
+            if (contact == null)
             {
                 return NotFound();
             }
 
-            return View(post);
+            return View(contact);
         }
 
-        // POST: Post/Delete/5
+        // POST: Contact/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var post = await context.Posts.FindAsync(id);
-            context.Posts.Remove(post);
+            var contact = await context.Contacts.FindAsync(id);
+            context.Contacts.Remove(contact);
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PostExists(int id)
+        private bool ContactExists(int id)
         {
-            return context.Posts.Any(e => e.Id == id);
+            return context.Contacts.Any(e => e.Id == id);
         }
     }
 }

@@ -1,8 +1,43 @@
-﻿@{
+﻿@model IEnumerable<BetaCinemas.Models.TicketPrice>
+
+@{
     ViewData["Title"] = "Giá vé";
 }
-<div class="text-center">
-    <img class="img-responsive margin-bottom-30 margin-top-20"
-         src="https://files.betacorp.vn/files/ecm/2021/01/28/1920x2400-bang-gia-my-dinh-155727-280121-78.jpg"
-         style="display: initial; width:100%">
+
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.DateType)</th>
+                <th>@Html.DisplayNameFor(model => model.StartTime)</th>
+                <th>@Html.DisplayNameFor(model => model.EndTime)</th>
+                <th>@Html.DisplayNameFor(model => model.IsPriority)</th>
+                <th>@Html.DisplayNameFor(model => model.Price)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.DateType)</td>
+                        <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EndTime)</td>
+                        @{
+                            if (item.IsPriority == true)
+                            {
+                                <td>Ưu tiên</td>
+                            }
+                            else
+                            {
+                                <td>Không ưu tiên</td>
+                            }
+
+                        }
+                        <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
 </div>

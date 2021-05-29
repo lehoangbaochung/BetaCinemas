@@ -8,7 +8,7 @@ namespace BetaCinemas.Models
     {
         public Movie()
         {
-            Tickets = new HashSet<Ticket>();
+            Showtimes = new HashSet<Showtime>();
         }
 
         public int Id { get; set; }
@@ -64,5 +64,7 @@ namespace BetaCinemas.Models
                 return $"{ array[2] }/{ array[1] }/20{ array[0] }";
             }
         }
+
+        public virtual ICollection<Showtime> Showtimes { get; set; }
     }
 }

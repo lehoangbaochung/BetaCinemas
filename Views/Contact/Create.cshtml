@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model BetaCinemas.Models.Contact
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
+
+@{
+    ViewData["Title"] = "Liên hệ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    @if (!SignInManager.IsSignedIn(User))
+    {
+        <meta http-equiv="refresh" content="0; url=/Identity/Account/Login">
+    }
+}
+
+<h3>@ViewData["Title"] với chúng tôi</h3>
+<hr />
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="MemberId" class="control-label"></label>
+                <input asp-for="MemberId" value="@User.Identity.Name" class="form-control" disabled/>
+            </div>
+            <div class="form-group">
+                <label asp-for="SentContent" class="control-label"></label>
+                <input asp-for="SentContent" class="form-control" />
+                <span asp-validation-for="SentContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" value="Create" class="btn btn-primary">Gửi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index"><< Xem danh sách phản hồi</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

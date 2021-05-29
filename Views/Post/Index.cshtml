@@ -24,7 +24,6 @@
                     <img class="card-img-top" data-holder-rendered="true"
                          src="@Html.DisplayFor(modelItem => item.ImageUrl)">
                     <div class="card-body">
-                        <h6 class="card-header text-danger">@Html.DisplayFor(modelItem => item.Genre)</h6>
                         <h3 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h3>
                         <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -35,7 +34,8 @@
                                    href="@Html.DisplayFor(modelItem => item.AttachedUrl)">Đính kèm</a>
                             </div>
                             <small class="text-muted text-right">
-                                @Html.DisplayFor(modelItem => item.PostDate)
+                                <a class="text-danger font-weight-bold">@Html.DisplayFor(modelItem => item.Genre)</a>
+                                <br />@Html.DisplayFor(modelItem => item.PostDate)
                             </small>
                         </div>
                     </div>
