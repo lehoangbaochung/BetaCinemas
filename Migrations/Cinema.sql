@@ -112,11 +112,11 @@ MemberId int not null,
 -- Thời gian liên hệ
 SentTime datetime not null,
 -- Nội dung gửi
-SendContent ntext not null,
+SentContent ntext not null,
 -- Thời gian trả lời
-ReplyTime datetime not null,
+ReplyTime datetime,
 -- Nội dung trả lời
-ReplyContent ntext not null,
+ReplyContent ntext,
 -- Trạng thái trả lời (đã đọc/chưa đọc)
 IsReplied bit not null,
 -- Liên kết với bảng Thành viên
@@ -146,7 +146,7 @@ RoomId int not null,
 -- Id phim
 MovieId int not null,
 -- Thời gian xuất chiếu
-ShowTime datetime not null,
+Times datetime not null,
 -- Định dạng phim (2D/3D)
 Is2D bit not null,
 -- Suất chiếu đặc biệt
@@ -160,7 +160,7 @@ create table TICKET(
 -- Id
 Id int not null primary key identity(1, 1),
 -- Id thành viên
-MemberId int not null,
+MemberId nvarchar(450) not null,
 -- Id suất chiếu
 ShowtimeId int not null,
 -- Id giá vé
@@ -168,9 +168,9 @@ TicketPriceId int not null,
 -- Thời gian bán vé
 SoldTime datetime not null,
 -- Liên kết với bảng Thành viên
-foreign key (MemberId) references MEMBER(Id),
+foreign key (MemberId) references Users(Id),
 -- Liên kết với bảng Suất chiếu
-foreign key (ShowtimeId) references SHOWTIME(Id),
+foreign key (ShowtimeId) references Showtime(Id),
 -- Liên kết với bảng Giá vé
-foreign key (TicketPriceId) references TICKETPRICE(Id))
+foreign key (TicketPriceId) references TicketPrice(Id))
 go

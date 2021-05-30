@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<BetaCinemas.Models.Showtime>
+@inject SignInManager<Member> SignInManager
+
+@{
+    ViewData["Title"] = "Tin mới và ưu đãi";
+
+    var isAdmin = false;
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (User.Identity.Name.Equals("admin@betacorp.vn"))
+        {
+            isAdmin = true;
+            Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+        }
+    }
+}
+
+<h3>Lịch chiếu</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Movie)</th>
+                <th>@Html.DisplayNameFor(model => model.Date)</th>
+                <th>@Html.DisplayNameFor(model => model.Time)</th>
+                <th>@Html.DisplayNameFor(model => model.Is2D)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model.OrderByDescending(s => s.Times))
+                {
+                    <tr>
+                        <td>
+                            <a href="/Movie/Information/@Html.DisplayFor(modelItem => item.Movie.Id)">
+                                @Html.DisplayFor(modelItem => item.Movie.Title)
+                            </a>
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Time)</td>
+                        @{
+                            if (item.Is2D == true)
+                            {
+                                <td>2D</td>
+                            }
+                            else
+                            {
+                                <td>3D</td>
+                            }
+
+                            if (isAdmin)
+                            {
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Sửa</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.Id">Xoá</a>
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

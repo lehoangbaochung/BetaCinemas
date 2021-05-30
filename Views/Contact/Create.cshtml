@@ -5,9 +5,15 @@
 
 @{
     ViewData["Title"] = "Liên hệ";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 
-    @if (!SignInManager.IsSignedIn(User))
+    @if (SignInManager.IsSignedIn(User))
+    {
+        if (User.Identity.Name.Equals("admin@betacorp.vn"))
+        {
+            <meta http-equiv="refresh" content="0; url=/Contact">
+        }
+    }
+    else
     {
         <meta http-equiv="refresh" content="0; url=/Identity/Account/Login">
     }
@@ -20,8 +26,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <input asp-for="MemberId" value="@User.Identity.Name" class="form-control" disabled/>
+                <label class="control-label">Email của bạn</label>
+                <input asp-for="MemberId" value="@User.Identity.Name" class="form-control" disabled />
             </div>
             <div class="form-group">
                 <label asp-for="SentContent" class="control-label"></label>

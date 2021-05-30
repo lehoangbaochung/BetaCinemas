@@ -31,7 +31,7 @@
                 <span asp-validation-for="Input.FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.Gender" class="custom-control-label"></label>
+                <label asp-for="Input.Gender"></label>
                 <select asp-for="Input.Gender"  class="form-control" data-placeholder="Chọn">
                     <option class="option-item">Chọn</option>
                     <option class="option-item" value="true">Nam</option>
@@ -56,7 +56,7 @@
                     <a href="/About/Privacy">điều khoản bảo mật</a> của Beta Cinemas
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary">Đăng ký</button>
+            <button type="submit" class="btn btn-primary text-center">Đăng ký</button>
         </form>
     </div>
     <div class="col-md-7 col-md-offset-2">

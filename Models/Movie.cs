@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BetaCinemas.Models
 {
+    [Display(Name = "Phim")]
     public partial class Movie
     {
         public Movie()

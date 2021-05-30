@@ -64,13 +64,14 @@
             <dt></dt>
             <dd class="text-right mt-4 col-sm-8">
                 <a type="button" class="btn btn-sm btn-outline-primary"
-                   href="#">Đặt vé</a>
+                   href="/Showtime/Select/@Html.DisplayFor(modelItem => modelItem.Id)">Suất chiếu</a>
                 <a type="button" class="btn btn-sm btn-outline-success"
-                   href="@Html.DisplayFor(modelItem => modelItem.TrailerUrl)">Xem trailer</a>
+                   href="@Html.DisplayFor(modelItem => modelItem.TrailerUrl)">Trailer</a>
             </dd>
         </dl>
     </dd>
 </dl>
+
 @*<h1 class="mt-4 text-center text-uppercase">Trailer</h1>
 <div class="row margin-bottom-20">
     <div class="col-md-12 col-md-offset-2 margin-bottom-35">

@@ -7,7 +7,7 @@ namespace BetaCinemas.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Thời gian đăng bài")]
+        [Display(Name = "Thời gian")]
         public DateTime PostTime { get; set; }
 
         [Display(Name = "Tiêu đề")]
@@ -16,7 +16,7 @@ namespace BetaCinemas.Models
         [Display(Name = "Nội dung")]
         public string Content { get; set; }
 
-        [Display(Name = "Thể loại")]
+        [Display(Name = "Chủ đề")]
         public string Genre { get; set; }
 
         [Display(Name = "URL đính kèm")]
@@ -36,6 +36,16 @@ namespace BetaCinemas.Models
             {
                 var array = PostTime.ToString().Split(' ')[0].Split('/');
                 return $"{ array[2] }/{ array[1] }/20{ array[0] }";
+            }
+        }
+
+        [Display(Name = "Thời gian")]
+        public string PostTimeToString
+        {
+            get
+            {
+                var array = PostTime.ToString().Split(' ')[0].Split('/');
+                return $"{ array[2] }/{ array[1] }/20{ array[0] } { PostTime.ToString().Split(' ')[1] }";
             }
         }
     }

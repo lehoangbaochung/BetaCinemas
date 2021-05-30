@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<BetaCinemas.Models.Showtime>
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
+
+@{
+    ViewData["Title"] = "Suất chiếu";
+}
+
+<div class="container">
+    <div class="pricing-header px-3 py-3 pb-md-4 mx-auto text-center">
+        <h3>@ViewData["Title"]</h3>
+        <p class="lead">Xin chào!</p>
+    </div>
+    <div class="card-deck mb-3 text-center">
+        @{
+            foreach (var item in Model)
+            {
+                @if (!SignInManager.IsSignedIn(User) && item.IsSpecial) return;
+
+                <div class="card mb-4 box-shadow" style="width:fit-content()">
+                    <div class="card-header">
+                        @{
+                            if (item.IsSpecial)
+                            {
+                                if (item.Is2D)
+                                {
+                                    <h4 class="my-0 font-weight-normal">Special: 2D</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="my-0 font-weight-normal">Special: 3D</h4>
+                                }
+                            }
+                            else
+                            {
+                                if (item.Is2D)
+                                {
+                                    <h4 class="my-0 font-weight-normal">2D</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="my-0 font-weight-normal">3D</h4>
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="card-body">
+                        @*<h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>*@
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>@Html.DisplayNameFor(modelItem => item.RoomId): @Html.DisplayFor(modelItem => item.RoomId)</li>
+                            <li>@Html.DisplayNameFor(modelItem => item.Date): @Html.DisplayFor(modelItem => item.Date)</li>
+                            <li>@Html.DisplayNameFor(modelItem => item.Time): @Html.DisplayFor(modelItem => item.Time)</li>
+                        </ul>
+                        @{
+                            if (item.IsSpecial)
+                            {
+                                if (item.Is2D)
+                                {
+                                    <button class="btn btn-lg btn-block btn-outline-danger"
+                                            type="button" href="/Ticket/Create">
+                                        Đặt vé
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-lg btn-block btn-danger"
+                                            type="button" href="/Ticket/Create">
+                                        Đặt vé
+                                    </button>
+                                }
+                            }
+                            else
+                            {
+                                if (item.Is2D)
+                                {
+                                    <button class="btn btn-lg btn-block btn-outline-primary"
+                                            type="button" href="/Ticket/Create">
+                                        Đặt vé
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-lg btn-block btn-primary"
+                                            type="button" href="/Ticket/Create">
+                                        Đặt vé
+                                    </button>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

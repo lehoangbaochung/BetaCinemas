@@ -67,7 +67,6 @@
                 <th>@Html.DisplayNameFor(model => model.StartTime)</th>
                 <th>@Html.DisplayNameFor(model => model.EndTime)</th>
                 <th>@Html.DisplayNameFor(model => model.IsPriority)</th>
-                <th>@Html.DisplayNameFor(model => model.Is2D)</th>
                 <th>@Html.DisplayNameFor(model => model.Price)</th>
             </tr>
         </thead>
@@ -88,16 +87,6 @@
                             {
                                 <td>Không ưu tiên</td>
                             }
-
-                            if (item.Is2D == true)
-                            {
-                                <td>2D</td>
-                            }
-                            else
-                            {
-                                <td>3D</td>
-                            }
-
                         }
                         <td>@Html.DisplayFor(modelItem => item.Price)</td>
                     </tr>
@@ -113,8 +102,6 @@
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.DateType)</th>
-                <th>@Html.DisplayNameFor(model => model.StartTime)</th>
-                <th>@Html.DisplayNameFor(model => model.EndTime)</th>
                 <th>@Html.DisplayNameFor(model => model.IsPriority)</th>
                 <th>@Html.DisplayNameFor(model => model.Price)</th>
             </tr>
@@ -125,8 +112,6 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.DateType)</td>
-                        <td>@Html.DisplayFor(modelItem => item.StartTime)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EndTime)</td>
                         @{
                             if (item.IsPriority == true)
                             {
@@ -145,3 +130,5 @@
         </tbody>
     </table>
 </div>
+<br />
+<p>* Đối tượng ưu tiên dành cho học sinh, sinh viên và người cao tuổi</p>

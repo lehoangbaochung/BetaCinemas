@@ -1,0 +1,53 @@
+﻿@model IEnumerable<BetaCinemas.Models.Contact>
+
+@{
+    ViewData["Title"] = "Danh sách phản hồi";
+}
+
+<h3>@ViewData["Title"]</h3>
+
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                @{
+                    <th>@Html.DisplayNameFor(model => model.SentTimeToString)</th>
+                    <th>@Html.DisplayNameFor(model => model.SentContent)</th>
+                    <th>@Html.DisplayNameFor(model => model.ReplyTimeToString)</th>
+                    <th>@Html.DisplayNameFor(model => model.ReplyContent)</th>
+                    <th>@Html.DisplayNameFor(model => model.IsReplied)</th>
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var item in Model.Where(c => c.IsReplied == false)
+                    .OrderByDescending(c => c.SentTime))
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => item.SentTimeToString)</td>
+                        <td>@Html.DisplayFor(model => item.SentContent)</td>
+                        <td>@Html.DisplayFor(model => item.ReplyTimeToString)</td>
+                        <td>@Html.DisplayFor(model => item.ReplyContent)</td>
+
+                        @{
+                            if (item.IsReplied == true)
+                            {
+                                <td>Đã trả lời</td>
+                            }
+                            else
+                            {
+                                <td>Chưa trả lời</td>
+                            }
+                        }
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Trả lời</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -21,8 +21,9 @@ namespace BetaCinemas.Controllers
         // GET: Contact
         public async Task<IActionResult> Index()
         {
-            var cinemaContext = context.Contacts.Include(c => c.Member);
-            return View(await cinemaContext.ToListAsync());
+            var contacts = context.Contacts.Where(c => c.MemberId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
+            return View(await contacts.ToListAsync());
         }
 
         // GET: Contact/Details/5
@@ -48,7 +49,6 @@ namespace BetaCinemas.Controllers
         // GET: Contact/Create
         public IActionResult Create()
         {
-            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id");
             return View();
         }
 
@@ -61,16 +61,15 @@ namespace BetaCinemas.Controllers
             if (ModelState.IsValid)
             {
                 contact.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                contact.SentTime = DateTime.Parse("2021/05/29 10:00:00");
-                context.Database.ExecuteSqlRaw("");
+                contact.IsReplied = false;
+                contact.SentTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+
                 context.Add(contact);
 
                 await context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Home");
             }
-
-            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
 
             return View(contact);
         }
@@ -89,7 +88,9 @@ namespace BetaCinemas.Controllers
             {
                 return NotFound();
             }
+
             ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
+
             return View(contact);
         }
 
@@ -105,6 +106,9 @@ namespace BetaCinemas.Controllers
 
             if (ModelState.IsValid)
             {
+                contact.IsReplied = true;
+                contact.ReplyTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+
                 try
                 {
                     context.Update(contact);
@@ -121,9 +125,12 @@ namespace BetaCinemas.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
+
             return View(contact);
         }
 

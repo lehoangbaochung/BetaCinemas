@@ -40,13 +40,17 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Contact");
 
-                entity.HasIndex(e => e.MemberId, "IX_Contact_MemberId");
+                entity.Property(e => e.MemberId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.Property(e => e.ReplyContent).HasColumnType("ntext");
+
+                entity.Property(e => e.ReplyTime).HasColumnType("datetime");
 
                 entity.Property(e => e.SentContent)
                     .IsRequired()
                     .HasColumnType("ntext");
-
-                entity.Property(e => e.MemberId).IsRequired();
 
                 entity.Property(e => e.SentTime).HasColumnType("datetime");
 
@@ -54,12 +58,7 @@ namespace BetaCinemas.Models
                     .WithMany(p => p.Contacts)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Contact__MemberI__725BF7F6");
-            });
-
-            modelBuilder.Entity<Member>(entity =>
-            {
-                entity.ToTable("User");
+                    .HasConstraintName("FK__Contact__UserId__08B54D69");
             });
 
             modelBuilder.Entity<Movie>(entity =>
@@ -106,6 +105,10 @@ namespace BetaCinemas.Models
                 entity.Property(e => e.ImageUrl).HasColumnType("text");
 
                 entity.Property(e => e.PostTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasColumnType("ntext");
             });
 
             modelBuilder.Entity<Room>(entity =>
@@ -127,7 +130,7 @@ namespace BetaCinemas.Models
                     .IsUnicode(false)
                     .IsFixedLength(true);
 
-                entity.HasOne(d => d.Room)
+                entity.HasOne(d => d.IdNavigation)
                     .WithOne(p => p.Seat)
                     .HasForeignKey<Seat>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -138,9 +141,9 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Showtime");
 
-                entity.Property(e => e.ShowTime)
+                entity.Property(e => e.Times)
                     .HasColumnType("datetime")
-                    .HasColumnName("ShowTime");
+                    .HasColumnName("Times");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.Showtimes)
@@ -159,15 +162,9 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Ticket");
 
-                entity.HasIndex(e => e.MemberId, "IX_Ticket_MemberId");
-
-                entity.HasIndex(e => e.ShowtimeId, "IX_Ticket_ShowtimeId");
-
-                entity.HasIndex(e => e.TicketPriceId, "IX_Ticket_TicketPriceId");
-
-                entity.HasIndex(e => e.MemberId, "IX_Ticket_UserId");
-
-                entity.Property(e => e.MemberId).IsRequired();
+                entity.Property(e => e.MemberId)
+                    .IsRequired()
+                    .HasMaxLength(450);
 
                 entity.Property(e => e.SoldTime).HasColumnType("datetime");
 
@@ -175,19 +172,19 @@ namespace BetaCinemas.Models
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__MemberId__00AA174D");
+                    .HasConstraintName("FK__Ticket__MemberId__123EB7A3");
 
                 entity.HasOne(d => d.Showtime)
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.ShowtimeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__ShowtimeId__019E3B86");
+                    .HasConstraintName("FK__Ticket__Showtime__1332DBDC");
 
                 entity.HasOne(d => d.TicketPrice)
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.TicketPriceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__TicketPr__6D0D32F4");
+                    .HasConstraintName("FK__Ticket__TicketPr__14270015");
             });
 
             modelBuilder.Entity<TicketPrice>(entity =>
