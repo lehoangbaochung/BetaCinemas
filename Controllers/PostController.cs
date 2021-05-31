@@ -53,7 +53,7 @@ namespace BetaCinemas.Controllers
         {
             if (ModelState.IsValid)
             {
-                post.PostTime = DateTime.Now;
+                post.PostTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
                 context.Add(post);
                 await context.SaveChangesAsync();

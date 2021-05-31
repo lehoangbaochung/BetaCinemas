@@ -1,52 +1,23 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@model IEnumerable<BetaCinemas.Models.Contact>
-@inject SignInManager<Member> SignInManager
-@inject UserManager<Member> UserManager
+﻿@model IEnumerable<BetaCinemas.Models.Contact>
 
 @{
     ViewData["Title"] = "Danh sách phản hồi";
-
-    var isAdmin = false;
-    var list = Model.Where(c => c.IsReplied.Equals(false));
-
-    @if (SignInManager.IsSignedIn(User))
-    {
-        if (User.Identity.Name.Equals("admin@betacorp.vn"))
-        {
-            isAdmin = true;
-        }
-        else
-        {
-            list = Model.Where(c => c.MemberId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-        }
-    }
 }
 
 <h3>@ViewData["Title"]</h3>
 
-@{
-    if (!isAdmin)
-    {
-        <p>
-            <a asp-action="Create">Gửi phản hồi mới</a>
-        </p>
-    }
-}
+<p>
+    <a asp-action="Create">Gửi phản hồi mới</a>
+</p>
 
 <div class="table-responsive">
     <table class="table table-striped table-sm">
         <thead>
             <tr>
                 @{
-                    if (isAdmin)
-                    {
-                        //<th>@Html.DisplayNameFor(model => model.Member.UserName)</th>
-                    }
-
                     <th>@Html.DisplayNameFor(model => model.SentTimeToString)</th>
-                    <th>@Html.DisplayNameFor(model => model.ReplyTimeToString)</th>
                     <th>@Html.DisplayNameFor(model => model.SentContent)</th>
+                    <th>@Html.DisplayNameFor(model => model.ReplyTimeToString)</th>
                     <th>@Html.DisplayNameFor(model => model.ReplyContent)</th>
                     <th>@Html.DisplayNameFor(model => model.IsReplied)</th>
                 }
@@ -54,19 +25,12 @@
         </thead>
         <tbody>
             @{
-                foreach (var item in list)
+                foreach (var item in Model)
                 {
                     <tr>
-                        @{
-                            if (isAdmin)
-                            {
-                                //<td>@Html.DisplayFor(modelItem => item.Member.UserName)</td>
-                            }
-
-                        }
                         <td>@Html.DisplayFor(model => item.SentTimeToString)</td>
-                        <td>@Html.DisplayFor(model => item.ReplyTimeToString)</td>
                         <td>@Html.DisplayFor(model => item.SentContent)</td>
+                        <td>@Html.DisplayFor(model => item.ReplyTimeToString)</td>
                         <td>@Html.DisplayFor(model => item.ReplyContent)</td>
 
                         @{
@@ -77,15 +41,6 @@
                             else
                             {
                                 <td>Chưa trả lời</td>
-                            }
-                        }
-
-                        @{
-                            if (isAdmin)
-                            {
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Trả lời</a>
-                                </td>
                             }
                         }
                     </tr>

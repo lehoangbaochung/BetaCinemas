@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
+using System.Data.SqlTypes;
 
 namespace BetaCinemas.Areas.Administrator.Controllers
 {
@@ -76,7 +77,7 @@ namespace BetaCinemas.Areas.Administrator.Controllers
             if (ModelState.IsValid)
             {
                 contact.IsReplied = true;
-                contact.ReplyTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                contact.ReplyTime = new SqlDateTime(DateTime.Now).Value;
 
                 try
                 {

@@ -176,6 +176,7 @@ namespace BetaCinemas.Migrations.Cinema
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: false),
+                    ShowtimeId = table.Column<int>(type: "int", nullable: false),
                     ShowTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     Is2D = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -311,7 +312,6 @@ namespace BetaCinemas.Migrations.Cinema
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MemberId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: false),
                     ShowtimeId = table.Column<int>(type: "int", nullable: false),
                     TicketPriceId = table.Column<int>(type: "int", nullable: false),
                     SoldTime = table.Column<DateTime>(type: "datetime", nullable: false),
@@ -324,12 +324,6 @@ namespace BetaCinemas.Migrations.Cinema
                         name: "FK__Ticket__MemberId__00AA174D",
                         column: x => x.MemberId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK__Ticket__MovieId__019E3B86",
-                        column: x => x.MovieId,
-                        principalTable: "Movie",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -374,10 +368,10 @@ namespace BetaCinemas.Migrations.Cinema
                 unique: true,
                 filter: "([NormalizedName] IS NOT NULL)");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Ticket_MemberId",
-                table: "Ticket",
-                column: "MemberId");
+            //migrationBuilder.CreateIndex(
+            //    name: "IX_Ticket_MemberId",
+            //    table: "Ticket",
+            //    column: "MemberId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ticket_MovieId",

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BetaCinemas.Models
 {
-    [Display(Name = "Giá vé")]
+    [Display(Name = "Loại vé")]
     public partial class TicketPrice
     {
         public TicketPrice()

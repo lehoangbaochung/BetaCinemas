@@ -1,0 +1,49 @@
+﻿@model IEnumerable<BetaCinemas.Models.Ticket>
+
+@{
+    ViewData["Title"] = "Danh sách vé bán";
+    Layout = "~/Areas/Administrator/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ViewData["Title"]</h3>
+<h5>Số lượng vé bán: @Model.Count(model => model.Id > 0)</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoldTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Showtime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketPrice)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoldTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Showtime.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketPrice.DateType)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Chi tiết</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

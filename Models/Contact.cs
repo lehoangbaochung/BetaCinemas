@@ -41,7 +41,7 @@ namespace BetaCinemas.Models
                 if (ReplyTime.HasValue == false) return string.Empty;
 
                 var array = ReplyTime.ToString().Split(' ')[0].Split('/');
-                return $"{ array[2] }/{ array[1] }/20{ array[0] } { SentTime.ToString().Split(' ')[1] }";
+                return $"{ array[2] }/{ array[1] }/20{ array[0] } { ReplyTime.ToString().Split(' ')[1] }";
             }
         }
     }

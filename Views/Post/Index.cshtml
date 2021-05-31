@@ -1,18 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model IEnumerable<BetaCinemas.Models.Post>
-@inject SignInManager<Member> SignInManager
-@inject UserManager<Member> UserManager
+﻿@model IEnumerable<BetaCinemas.Models.Post>
 
 @{
     ViewData["Title"] = "Tin mới và ưu đãi";
-
-    @if (SignInManager.IsSignedIn(User))
-     {
-        if (User.Identity.Name.Equals("admin@betacorp.vn"))
-        {
-            Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-        }
-     }
 }
 
 <div class="row mb-3">

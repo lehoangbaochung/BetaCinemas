@@ -3,18 +3,7 @@
 @inject SignInManager<Member> SignInManager
 
 @{
-    ViewData["Title"] = "Tin mới và ưu đãi";
-
-    var isAdmin = false;
-
-    @if (SignInManager.IsSignedIn(User))
-    {
-        if (User.Identity.Name.Equals("admin@betacorp.vn"))
-        {
-            isAdmin = true;
-            Layout = "~/Views/Shared/_DashboardLayout.cshtml";
-        }
-    }
+    ViewData["Title"] = "Lịch chiếu";
 }
 
 <h3>Lịch chiếu</h3>
@@ -48,14 +37,6 @@
                             else
                             {
                                 <td>3D</td>
-                            }
-
-                            if (isAdmin)
-                            {
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">Sửa</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id">Xoá</a>
-                                </td>
                             }
                         }
                     </tr>

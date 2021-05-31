@@ -59,9 +59,9 @@ namespace BetaCinemas.Controllers
             [Bind("Id,MemberId,SentTime,SentContent,ReplyTime,ReplyContent,IsReplied")] Contact contact)
         {
             if (ModelState.IsValid)
-            {
-                contact.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            {                
                 contact.IsReplied = false;
+                contact.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 contact.SentTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
                 context.Add(contact);

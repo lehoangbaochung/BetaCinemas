@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-#nullable disable
-
-namespace BetaCinemas.Models
+﻿namespace BetaCinemas.Models
 {
     public partial class Seat
     {
@@ -13,6 +8,6 @@ namespace BetaCinemas.Models
         public int ColumnIndex { get; set; }
         public bool IsEmpty { get; set; }
 
-        public virtual Room IdNavigation { get; set; }
+        public virtual Room Room { get; set; }
     }
 }

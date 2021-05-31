@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BetaCinemas.Models
 {
+    [Display(Name = "Thành viên")]
     public partial class Member : IdentityUser
     {
         public Member()

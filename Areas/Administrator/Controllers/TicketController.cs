@@ -1,36 +1,35 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
-using System.Security.Claims;
 
-namespace BetaCinemas.Controllers
+namespace BetaCinemas.Areas.Administrator.Controllers
 {
+    [Area("Administrator")]
     public class TicketController : Controller
     {
         private readonly CinemaContext context;
-        private static int showtimeId;
 
         public TicketController(CinemaContext context)
         {
             this.context = context;
         }
 
-        // GET: Ticket
+        // GET: Administrator/Ticket
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Index()
         {
-            var tickets = context.Tickets
+            var cinemaContext = context.Tickets
                 .Include(t => t.Showtime)
-                .Include(t => t.TicketPrice)
-                .Where(t => t.MemberId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+                .Include(t => t.TicketPrice);
 
-            return View(await tickets.ToListAsync());
+            return View(await cinemaContext.ToListAsync());
         }
 
-        // GET: Ticket/Details/5
+        // GET: Administrator/Ticket/Details/5
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,7 +38,6 @@ namespace BetaCinemas.Controllers
             }
 
             var ticket = await context.Tickets
-                .Include(t => t.Member)
                 .Include(t => t.Showtime)
                 .Include(t => t.TicketPrice)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -52,42 +50,37 @@ namespace BetaCinemas.Controllers
             return View(ticket);
         }
 
-        // GET: Ticket/Create
-        public IActionResult Create(int id)
+        // GET: Administrator/Ticket/Create
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
+        public IActionResult Create()
         {
-            if (id == 0)
-            {
-                return NotFound();
-            }
-
-            showtimeId = id;
-
+            //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id");
+            ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id");
+            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType");
             return View();
         }
 
-        // POST: Ticket/Create
+        // POST: Administrator/Ticket/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,MemberId,ShowtimeId,TicketPriceId,SoldTime")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                ticket.TicketPriceId = 1;
-                ticket.ShowtimeId = showtimeId;
-                ticket.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                ticket.SoldTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-
                 context.Add(ticket);
                 await context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index));
             }
-
+            //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
+            ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
+            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 
-        // GET: Ticket/Edit/5
+        // GET: Administrator/Ticket/Edit/5
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,10 +99,10 @@ namespace BetaCinemas.Controllers
             return View(ticket);
         }
 
-        // POST: Ticket/Edit/5
+        // POST: Administrator/Ticket/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,MemberId,ShowtimeId,TicketPriceId,SoldTime")] Ticket ticket)
         {
@@ -138,13 +131,14 @@ namespace BetaCinemas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
+            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
             ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 
-        // GET: Ticket/Delete/5
+        // GET: Administrator/Ticket/Delete/5
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -165,8 +159,8 @@ namespace BetaCinemas.Controllers
             return View(ticket);
         }
 
-        // POST: Ticket/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Administrator/Ticket/Delete/5
+        [HttpPost("{area:exists}/{controller=Home}/{action=Index}/{id?}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

@@ -130,7 +130,7 @@ namespace BetaCinemas.Models
                     .IsUnicode(false)
                     .IsFixedLength(true);
 
-                entity.HasOne(d => d.IdNavigation)
+                entity.HasOne(d => d.Room)
                     .WithOne(p => p.Seat)
                     .HasForeignKey<Seat>(d => d.Id)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -184,7 +184,7 @@ namespace BetaCinemas.Models
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.TicketPriceId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__TicketPr__14270015");
+                    .HasConstraintName("FK__Ticket__TicketPr__151B244E");
             });
 
             modelBuilder.Entity<TicketPrice>(entity =>
