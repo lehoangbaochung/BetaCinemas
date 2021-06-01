@@ -39,7 +39,6 @@ namespace BetaCinemas.Controllers
             }
 
             var ticket = await context.Tickets
-                .Include(t => t.Member)
                 .Include(t => t.Showtime)
                 .Include(t => t.TicketPrice)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -70,7 +69,7 @@ namespace BetaCinemas.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Ticket ticket)
+        public async Task<IActionResult> Create([Bind("MemberId,ShowtimeId,TicketPriceId,SoldTime")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +80,7 @@ namespace BetaCinemas.Controllers
 
                 context.Add(ticket);
                 await context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(ticket);
@@ -111,7 +110,7 @@ namespace BetaCinemas.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MemberId,ShowtimeId,TicketPriceId,SoldTime")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("MemberId,ShowtimeId,TicketPriceId,SoldTime")] Ticket ticket)
         {
             if (id != ticket.Id)
             {
@@ -153,10 +152,10 @@ namespace BetaCinemas.Controllers
             }
 
             var ticket = await context.Tickets
-                .Include(t => t.Member)
                 .Include(t => t.Showtime)
                 .Include(t => t.TicketPrice)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (ticket == null)
             {
                 return NotFound();

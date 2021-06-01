@@ -1,7 +1,7 @@
 ﻿@model BetaCinemas.Models.Contact
 
 @{
-    ViewData["Title"] = "Trả lời phản hồi";
+    ViewData["Title"] = "Chỉnh sửa phản hồi";
 }
 
 <h3>@ViewData["Title"]</h3>
@@ -12,35 +12,24 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="MemberId" class="control-label"></label>
-                <select asp-for="MemberId" asp-items="ViewBag.MemberId" 
-                        class="form-control"  disabled></select>
-                <span asp-validation-for="MemberId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SentTime" class="control-label"></label>
-                <input asp-for="SentTime" class="form-control" disabled />
-                <span asp-validation-for="SentTime" class="text-danger"></span>
+                <label asp-for="SentTimeToString" class="control-label"></label>
+                <input asp-for="SentTimeToString" class="form-control" disabled />
+                <span asp-validation-for="SentTimeToString" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SentContent" class="control-label"></label>
-                <input asp-for="SentContent" class="form-control" disabled />
+                <input asp-for="SentContent" class="form-control" />
                 <span asp-validation-for="SentContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ReplyContent" class="control-label"></label>
-                <input asp-for="ReplyContent" class="form-control" />
-                <span asp-validation-for="ReplyContent" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="submit" value="Save" class="btn btn-primary">Cập nhật</button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index"><< Trở lại trang trước</a>
 </div>
 
 @section Scripts {

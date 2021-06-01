@@ -530,7 +530,7 @@ namespace BetaCinemas.Migrations.Cinema
                         .HasConstraintName("FK__Seat__Id__7720AD13")
                         .IsRequired();
 
-                    b.Navigation("IdNavigation");
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("BetaCinemas.Models.Showtime", b =>
@@ -541,7 +541,7 @@ namespace BetaCinemas.Migrations.Cinema
                         .HasConstraintName("FK__Showtime__Id__7BE56230")
                         .IsRequired();
 
-                    b.Navigation("IdNavigation");
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("BetaCinemas.Models.Ticket", b =>

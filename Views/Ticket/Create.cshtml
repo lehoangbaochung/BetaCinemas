@@ -1,13 +1,21 @@
-﻿@model BetaCinemas.Models.Ticket
+﻿@using Microsoft.AspNetCore.Identity
+@model BetaCinemas.Models.Ticket
+@inject SignInManager<Member> SignInManager
+@inject UserManager<Member> UserManager
 
 @{
     ViewData["Title"] = "Đặt vé";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    if (!SignInManager.IsSignedIn(User))
+    {
+        <meta http-equiv="Refresh" content="0; url=/Identity/Account/Login" />
+    }
 }
 
-<h3>@ViewData["Title"]</h3>
-<hr />
 <div class="row">
+    <h3>@ViewData["Title"]</h3>
+    <hr />
     <div class="justify-content-center">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -20,7 +28,7 @@
 </div>
 
 <div>
-    <a asp-controller="Showtime" asp-action="Index"><< Quay lại suất chiếu</a>
+    <a asp-controller="Showtime" asp-action="Index"><< Xem suất chiếu khác</a>
 </div>
 
 @section Scripts {

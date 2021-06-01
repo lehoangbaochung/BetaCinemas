@@ -31,6 +31,7 @@ namespace BetaCinemas.Controllers
 
             var ticketPrice = await _context.TicketPrices
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (ticketPrice == null)
             {
                 return NotFound();

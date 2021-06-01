@@ -28,8 +28,12 @@ namespace BetaCinemas.Models
         [Display(Name = "Suất chiếu đặc biệt")]
         public bool IsSpecial { get; set; }
 
+        [Display(Name = "Phim")]
         public virtual Movie Movie { get; set; }
+
+        [Display(Name = "Phòng")]
         public virtual Room Room { get; set; }
+
         public virtual ICollection<Ticket> Tickets { get; set; }
 
         [Display(Name = "Ngày")]
@@ -45,7 +49,14 @@ namespace BetaCinemas.Models
         [Display(Name = "Thời gian")]
         public string Time
         {
-            get => Times.ToString().Split(' ')[1];
+            get => Times.ToString().Split(' ')[1]
+                .Remove(Times.ToString().Split(' ')[1].LastIndexOf(':'));
+        }
+
+        [Display(Name = "Thời gian")]
+        public string DateTime
+        {
+            get => $"{ Date } { Time }";
         }
     }
 }

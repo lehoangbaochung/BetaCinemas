@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using System;
@@ -15,7 +14,7 @@ namespace BetaCinemas.Controllers
 
         public ContactController(CinemaContext context)
         {
-            this.context = context;
+            this.context = context; 
         }
 
         // GET: Contact
@@ -35,7 +34,6 @@ namespace BetaCinemas.Controllers
             }
 
             var contact = await context.Contacts
-                .Include(c => c.Member)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (contact == null)
@@ -68,7 +66,7 @@ namespace BetaCinemas.Controllers
 
                 await context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(contact);
@@ -89,8 +87,6 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
-
             return View(contact);
         }
 
@@ -106,8 +102,9 @@ namespace BetaCinemas.Controllers
 
             if (ModelState.IsValid)
             {
-                contact.IsReplied = true;
-                contact.ReplyTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                contact.IsReplied = false;
+                contact.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                contact.SentTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
                 try
                 {
@@ -129,8 +126,6 @@ namespace BetaCinemas.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", contact.MemberId);
-
             return View(contact);
         }
 
@@ -143,8 +138,8 @@ namespace BetaCinemas.Controllers
             }
 
             var contact = await context.Contacts
-                .Include(c => c.Member)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (contact == null)
             {
                 return NotFound();
