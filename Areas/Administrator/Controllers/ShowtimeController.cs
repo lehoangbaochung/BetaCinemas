@@ -6,45 +6,28 @@ using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using BetaCinemas.Data.Contexts;
 
-namespace BetaCinemas.Controllers
+namespace BetaCinemas.Areas.Administrator.Controllers
 {
+    [Area("Administrator")]
     public class ShowtimeController : Controller
     {
-        private readonly CinemaContext context;
+        private readonly CinemaContext _context;
 
         public ShowtimeController(CinemaContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
-        // GET: Showtime
+        // GET: Administrator/Showtime
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Index()
         {
-            var cinemaContext = context.Showtimes
-                .Include(s => s.Movie)
-                .Include(s => s.Room)
-                .OrderByDescending(s => s.Times);
-
+            var cinemaContext = _context.Showtimes.Include(s => s.Movie).Include(s => s.Room);
             return View(await cinemaContext.ToListAsync());
         }
 
-        // GET: Showtime/Select/5
-        public async Task<IActionResult> Select(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cinemaContext = context.Showtimes
-                .Include(s => s.Movie)
-                .Include(s => s.Room)
-                .Where(s => s.MovieId == id);
-
-            return View(await cinemaContext.ToListAsync());
-        }
-
-        // GET: Showtime/Details/5
+        // GET: Administrator/Showtime/Details/5
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,11 +35,10 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            var showtime = await context.Showtimes
+            var showtime = await _context.Showtimes
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
             if (showtime == null)
             {
                 return NotFound();
@@ -65,31 +47,35 @@ namespace BetaCinemas.Controllers
             return View(showtime);
         }
 
-        // GET: Showtime/Create
+        // GET: Administrator/Showtime/Create
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public IActionResult Create()
         {
-            ViewData["MovieId"] = new SelectList(context.Movies, "Id", "Title");
-            ViewData["RoomId"] = new SelectList(context.Rooms, "Id", "Id");
+            ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title");
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id");
             return View();
         }
 
-        // POST: Showtime/Create
-        [HttpPost]
+        // POST: Administrator/Showtime/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RoomId,MovieId,ShowTime1,Is2D,IsSpecial")] Showtime showTime)
+        public async Task<IActionResult> Create([Bind("Id,RoomId,MovieId,Times,Is2D,IsSpecial")] Showtime showtime)
         {
             if (ModelState.IsValid)
             {
-                context.Add(showTime);
-                await context.SaveChangesAsync();
+                _context.Add(showtime);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MovieId"] = new SelectList(context.Movies, "Id", "Title", showTime.MovieId);
-            ViewData["RoomId"] = new SelectList(context.Rooms, "Id", "Id", showTime.RoomId);
-            return View(showTime);
+            ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title", showtime.MovieId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", showtime.RoomId);
+            return View(showtime);
         }
 
-        // GET: Showtime/Edit/5
+        // GET: Administrator/Showtime/Edit/5
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,22 +83,22 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            var showtime = await context.Showtimes.FindAsync(id);
+            var showtime = await _context.Showtimes.FindAsync(id);
             if (showtime == null)
             {
                 return NotFound();
             }
-            ViewData["MovieId"] = new SelectList(context.Movies, "Id", "Title", showtime.MovieId);
-            ViewData["RoomId"] = new SelectList(context.Rooms, "Id", "Id", showtime.RoomId);
+            ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title", showtime.MovieId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", showtime.RoomId);
             return View(showtime);
         }
 
-        // POST: Showtime/Edit/5
+        // POST: Administrator/Showtime/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RoomId,MovieId,ShowTime1,Is2D,IsSpecial")] Showtime showtime)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RoomId,MovieId,Times,Is2D,IsSpecial")] Showtime showtime)
         {
             if (id != showtime.Id)
             {
@@ -123,8 +109,8 @@ namespace BetaCinemas.Controllers
             {
                 try
                 {
-                    context.Update(showtime);
-                    await context.SaveChangesAsync();
+                    _context.Update(showtime);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -139,12 +125,13 @@ namespace BetaCinemas.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MovieId"] = new SelectList(context.Movies, "Id", "Title", showtime.MovieId);
-            ViewData["RoomId"] = new SelectList(context.Rooms, "Id", "Id", showtime.RoomId);
+            ViewData["MovieId"] = new SelectList(_context.Movies, "Id", "Title", showtime.MovieId);
+            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", showtime.RoomId);
             return View(showtime);
         }
 
-        // GET: Showtime/Delete/5
+        // GET: Administrator/Showtime/Delete/5
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,7 +139,7 @@ namespace BetaCinemas.Controllers
                 return NotFound();
             }
 
-            var showtime = await context.Showtimes
+            var showtime = await _context.Showtimes
                 .Include(s => s.Movie)
                 .Include(s => s.Room)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -164,20 +151,20 @@ namespace BetaCinemas.Controllers
             return View(showtime);
         }
 
-        // POST: Showtime/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Administrator/Showtime/Delete/5
+        [HttpPost("{area:exists}/{controller=Home}/{action=Index}/{id?}"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var showtime = await context.Showtimes.FindAsync(id);
-            context.Showtimes.Remove(showtime);
-            await context.SaveChangesAsync();
+            var showtime = await _context.Showtimes.FindAsync(id);
+            _context.Showtimes.Remove(showtime);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ShowtimeExists(int id)
         {
-            return context.Showtimes.Any(e => e.Id == id);
+            return _context.Showtimes.Any(e => e.Id == id);
         }
     }
 }

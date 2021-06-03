@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using System.Data.SqlTypes;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Areas.Administrator.Controllers
 {

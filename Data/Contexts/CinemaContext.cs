@@ -1,7 +1,8 @@
-﻿using System.Configuration;
+﻿using BetaCinemas.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
-namespace BetaCinemas.Models
+namespace BetaCinemas.Data.Contexts
 {
     public partial class CinemaContext : DbContext
     {
@@ -15,14 +16,12 @@ namespace BetaCinemas.Models
         }
 
         public virtual DbSet<Contact> Contacts { get; set; }
-        public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
-        public virtual DbSet<Seat> Seats { get; set; }
         public virtual DbSet<Showtime> Showtimes { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
-        public virtual DbSet<TicketPrice> TicketPrices { get; set; }
+        public virtual DbSet<Member> Members { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,9 +39,9 @@ namespace BetaCinemas.Models
             {
                 entity.ToTable("Contact");
 
-                entity.Property(e => e.MemberId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.HasIndex(e => e.MemberId, "IX_Contact_MemberId");
+
+                entity.Property(e => e.MemberId).IsRequired();
 
                 entity.Property(e => e.ReplyContent).HasColumnType("ntext");
 
@@ -58,7 +57,7 @@ namespace BetaCinemas.Models
                     .WithMany(p => p.Contacts)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Contact__UserId__08B54D69");
+                    .HasConstraintName("FK__Contact__MemberI__725BF7F6");
             });
 
             modelBuilder.Entity<Movie>(entity =>
@@ -108,7 +107,7 @@ namespace BetaCinemas.Models
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasColumnType("ntext");
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<Room>(entity =>
@@ -118,53 +117,34 @@ namespace BetaCinemas.Models
                 entity.Property(e => e.About).HasColumnType("ntext");
             });
 
-            modelBuilder.Entity<Seat>(entity =>
-            {
-                entity.ToTable("Seat");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.RowIndex)
-                    .IsRequired()
-                    .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .IsFixedLength(true);
-
-                entity.HasOne(d => d.Room)
-                    .WithOne(p => p.Seat)
-                    .HasForeignKey<Seat>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Seat__Id__7720AD13");
-            });
-
             modelBuilder.Entity<Showtime>(entity =>
             {
                 entity.ToTable("Showtime");
 
-                entity.Property(e => e.Times)
-                    .HasColumnType("datetime")
-                    .HasColumnName("Times");
+                entity.Property(e => e.Times).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Movie)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.MovieId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Showtime__MovieI__6754599E");
+                    .HasConstraintName("FK__Showtime__MovieI__09A971A2");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Showtimes)
                     .HasForeignKey(d => d.RoomId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Showtime__RoomId__66603565");
+                    .HasConstraintName("FK__Showtime__RoomId__08B54D69");
             });
 
             modelBuilder.Entity<Ticket>(entity =>
             {
                 entity.ToTable("Ticket");
 
-                entity.Property(e => e.MemberId)
-                    .IsRequired()
-                    .HasMaxLength(450);
+                entity.HasIndex(e => e.MemberId, "IX_Ticket_MemberId");
+
+                entity.HasIndex(e => e.ShowtimeId, "IX_Ticket_ShowtimeId");
+
+                entity.Property(e => e.MemberId).IsRequired();
 
                 entity.Property(e => e.SoldTime).HasColumnType("datetime");
 
@@ -172,28 +152,24 @@ namespace BetaCinemas.Models
                     .WithMany(p => p.Tickets)
                     .HasForeignKey(d => d.MemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__MemberId__123EB7A3");
-
-                entity.HasOne(d => d.Showtime)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.ShowtimeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__Showtime__1332DBDC");
-
-                entity.HasOne(d => d.TicketPrice)
-                    .WithMany(p => p.Tickets)
-                    .HasForeignKey(d => d.TicketPriceId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Ticket__TicketPr__151B244E");
+                    .HasConstraintName("FK__Ticket__MemberId__00AA174D");
             });
 
-            modelBuilder.Entity<TicketPrice>(entity =>
+            modelBuilder.Entity<Member>(entity =>
             {
-                entity.ToTable("TicketPrice");
+                entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
 
-                entity.Property(e => e.DateType)
-                    .IsRequired()
-                    .HasMaxLength(20);
+                entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
             OnModelCreatingPartial(modelBuilder);

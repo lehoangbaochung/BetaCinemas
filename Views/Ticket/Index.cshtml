@@ -30,10 +30,8 @@
                             </a>
                         </td>
                         <td>
-                            <a asp-controller="TicketPrice" asp-action="Details" asp-route-id="@item.TicketPriceId">
-                                @Html.DisplayFor(modelItem => item.TicketPrice.DateType)
-                            </a>
-                            </td>
+                            @Html.DisplayFor(modelItem => item.TicketPrice)
+                        </td>
                         <td>
                             <a asp-controller="Ticket" asp-action="Delete" asp-route-id="@item.Id">
                                 Huỷ

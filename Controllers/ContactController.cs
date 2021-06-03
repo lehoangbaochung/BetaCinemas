@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using System;
 using System.Security.Claims;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Controllers
 {

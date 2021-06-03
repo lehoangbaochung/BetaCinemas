@@ -15,11 +15,12 @@
                 <th>@Html.DisplayNameFor(model => model.Date)</th>
                 <th>@Html.DisplayNameFor(model => model.Time)</th>
                 <th>@Html.DisplayNameFor(model => model.Is2D)</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @{
-                foreach (var item in Model.OrderByDescending(s => s.Times))
+                foreach (var item in Model)
                 {
                     <tr>
                         <td>
@@ -37,6 +38,15 @@
                             else
                             {
                                 <td>3D</td>
+                            }
+
+                            if (item.IsSpecial)
+                            {
+                                <td>Suất chiếu đặc biệt</td>
+                            }
+                            else
+                            {
+                                <td></td>
                             }
                         }
                     </tr>

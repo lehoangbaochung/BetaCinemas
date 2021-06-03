@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
+using System;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Areas.Administrator.Controllers
 {
@@ -24,6 +26,50 @@ namespace BetaCinemas.Areas.Administrator.Controllers
             var cinemaContext = context.Tickets
                 .Include(t => t.Showtime)
                 .Include(t => t.TicketPrice);
+
+            return View(await cinemaContext.ToListAsync());
+        }
+
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
+        public async Task<IActionResult> Index2()
+        {
+            var cinemaContext = context.Tickets
+                .Include(t => t.Showtime)
+                .Include(t => t.TicketPrice)
+                .Where(t => t.SoldTime.Year == DateTime.Now.Year);
+
+            return View(await cinemaContext.ToListAsync());
+        }
+
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
+        public async Task<IActionResult> Index3()
+        {
+            var cinemaContext = context.Tickets
+                .Include(t => t.Showtime)
+                .Include(t => t.TicketPrice)
+                .Where(t => t.SoldTime.Month == DateTime.Now.Month);
+
+            return View(await cinemaContext.ToListAsync());
+        }
+
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
+        public async Task<IActionResult> Index4()
+        {
+            var cinemaContext = context.Tickets
+                .Include(t => t.Showtime)
+                .Include(t => t.TicketPrice)
+                .Where(t => t.SoldTime.DayOfYear > DateTime.Now.DayOfYear - 7 && t.SoldTime.DayOfYear <= DateTime.Now.DayOfYear);
+
+            return View(await cinemaContext.ToListAsync());
+        }
+
+        [HttpGet("{area:exists}/{controller=Home}/{action=Index}/{id?}")]
+        public async Task<IActionResult> Index5()
+        {
+            var cinemaContext = context.Tickets
+                .Include(t => t.Showtime)
+                .Include(t => t.TicketPrice)
+                .Where(t => t.SoldTime.DayOfYear > DateTime.Now.DayOfYear - 90 && t.SoldTime.DayOfYear <= DateTime.Now.DayOfYear);
 
             return View(await cinemaContext.ToListAsync());
         }
@@ -56,7 +102,6 @@ namespace BetaCinemas.Areas.Administrator.Controllers
         {
             //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id");
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id");
-            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType");
             return View();
         }
 
@@ -75,7 +120,6 @@ namespace BetaCinemas.Areas.Administrator.Controllers
             }
             //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
-            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 
@@ -95,7 +139,6 @@ namespace BetaCinemas.Areas.Administrator.Controllers
             }
             //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
-            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 
@@ -133,7 +176,6 @@ namespace BetaCinemas.Areas.Administrator.Controllers
             }
             ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
-            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 

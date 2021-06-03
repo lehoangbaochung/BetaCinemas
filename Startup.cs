@@ -1,3 +1,4 @@
+using BetaCinemas.Data.Contexts;
 using BetaCinemas.Migrations;
 using BetaCinemas.Models;
 using Microsoft.AspNetCore.Builder;

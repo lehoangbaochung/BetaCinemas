@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using System;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Areas.Administrator.Controllers
 {

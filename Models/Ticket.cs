@@ -9,14 +9,17 @@ namespace BetaCinemas.Models
         public int Id { get; set; }
         public string MemberId { get; set; }
         public int ShowtimeId { get; set; }
-        public int TicketPriceId { get; set; }
+
+        [Display(Name = "Giá vé (VND)")]
+        public int TicketPrice{ get; set; }
 
         [Display(Name = "Thời gian đặt vé")]
         public DateTime SoldTime { get; set; }
 
         public virtual Member Member { get; set; }
+
+        [Display(Name = "Suất chiếu")]
         public virtual Showtime Showtime { get; set; }
-        public virtual TicketPrice TicketPrice { get; set; }
 
         [Display(Name = "Ngày")]
         public string Date

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
 using System.Security.Claims;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Controllers
 {
@@ -24,7 +25,6 @@ namespace BetaCinemas.Controllers
         {
             var tickets = context.Tickets
                 .Include(t => t.Showtime)
-                .Include(t => t.TicketPrice)
                 .Where(t => t.MemberId.Equals(User.FindFirstValue(ClaimTypes.NameIdentifier)));
 
             return View(await tickets.ToListAsync());
@@ -40,7 +40,6 @@ namespace BetaCinemas.Controllers
 
             var ticket = await context.Tickets
                 .Include(t => t.Showtime)
-                .Include(t => t.TicketPrice)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ticket == null)
@@ -65,16 +64,15 @@ namespace BetaCinemas.Controllers
         }
 
         // POST: Ticket/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MemberId,ShowtimeId,TicketPriceId,SoldTime")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("MemberId,SoldTime")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                ticket.TicketPriceId = 1;
                 ticket.ShowtimeId = showtimeId;
+                ticket.Showtime = await context.Showtimes.FindAsync(showtimeId);
+                ticket.TicketPrice = GetPrice(ticket);
                 ticket.MemberId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 ticket.SoldTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
@@ -101,7 +99,6 @@ namespace BetaCinemas.Controllers
             }
             //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
-            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 
@@ -139,7 +136,6 @@ namespace BetaCinemas.Controllers
             }
             //ViewData["MemberId"] = new SelectList(context.Members, "Id", "Id", ticket.MemberId);
             ViewData["ShowtimeId"] = new SelectList(context.Showtimes, "Id", "Id", ticket.ShowtimeId);
-            ViewData["TicketPriceId"] = new SelectList(context.TicketPrices, "Id", "DateType", ticket.TicketPriceId);
             return View(ticket);
         }
 
@@ -153,7 +149,6 @@ namespace BetaCinemas.Controllers
 
             var ticket = await context.Tickets
                 .Include(t => t.Showtime)
-                .Include(t => t.TicketPrice)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (ticket == null)
@@ -178,6 +173,23 @@ namespace BetaCinemas.Controllers
         private bool TicketExists(int id)
         {
             return context.Tickets.Any(e => e.Id == id);
+        }
+
+        private static int GetPrice(Ticket ticket)
+        {
+            int price = 50000;
+
+            if (ticket.Showtime.Is2D == false)
+                price += 10000;
+
+            if (ticket.Showtime.IsSpecial == true)
+                price += 15000;
+
+            if (ticket.Showtime.Times.DayOfWeek.ToString() == "6" || 
+                ticket.Showtime.Times.DayOfWeek.ToString() == "0")
+                price += 10000;
+
+            return price;
         }
     }
 }

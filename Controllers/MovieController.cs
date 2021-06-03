@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Controllers
 {
@@ -21,22 +22,22 @@ namespace BetaCinemas.Controllers
             return View(await _context.Movies.ToListAsync());
         }
 
-        // GET: Movie
+        // GET: Movie/Showing
         public async Task<IActionResult> Showing()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(await _context.Movies.Where(m => m.IsShowing == true).ToListAsync());
         }
 
-        // GET: Movie
+        // GET: Movie/Showed
         public async Task<IActionResult> Showed()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(await _context.Movies.Where(m => m.IsShowing == null).ToListAsync());
         }
 
-        // GET: Movie
+        // GET: Movie/Premiere
         public async Task<IActionResult> Premiere()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(await _context.Movies.Where(m => m.IsShowing == false).ToListAsync());
         }
 
         // GET: Movie/Details/5

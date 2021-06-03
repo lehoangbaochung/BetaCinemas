@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BetaCinemas.Models;
+using BetaCinemas.Data.Contexts;
 
 namespace BetaCinemas.Areas.Administrator.Controllers
 {

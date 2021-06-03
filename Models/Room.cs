@@ -17,7 +17,6 @@ namespace BetaCinemas.Models
         public int ColumnTotal { get; set; }
         public string About { get; set; }
 
-        public virtual Seat Seat { get; set; }
         public virtual ICollection<Showtime> Showtimes { get; set; }
     }
 }
